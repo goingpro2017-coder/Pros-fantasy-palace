@@ -190,6 +190,12 @@ const Ledger = {
       }
     }
 
+    // bets involving the user's team (singles on their game, parlays with a leg in it)
+    const fav = App.fav();
+    const favBets = bets.filter(b =>
+      App.isFavGame(b) || (b.legs || []).some(l => App.isFavGame(l)));
+    const favRec = this.record(favBets);
+
     // average CLV over singles that have it
     const clvPts = settled.filter(b => b.clvKind === 'pts');
     const avgClv = clvPts.length
@@ -204,15 +210,16 @@ const Ledger = {
       parlays: this.record(parlays),
       parlayCount: parlays.length,
       nearMiss, you, model, flippedCount: flipped.length, avgClv,
+      fav, favRec, favCount: favBets.length,
     };
   },
 
   /* ---------- chart ---------- */
 
   SERIES: [
-    { key: 'card-ats', label: 'ATS card', color: 'var(--series-1)', hex: '#3987e5' },
-    { key: 'card-ml', label: 'ML card', color: 'var(--series-2)', hex: '#d95926' },
-    { key: 'parlay', label: 'Parlays', color: 'var(--series-3)', hex: '#199e70' },
+    { key: 'card-ats', label: 'ATS card', color: 'var(--series-1)', hex: '#5b8ee8' },
+    { key: 'card-ml', label: 'ML card', color: 'var(--series-2)', hex: '#d9535f' },
+    { key: 'parlay', label: 'Parlays', color: 'var(--series-3)', hex: '#2aa79c' },
   ],
 
   chartData() {
@@ -254,12 +261,15 @@ const Ledger = {
     const lines = data.map(d => {
       const path = d.pts.map((p, i) => (i ? 'L' : 'M') + x(p.t).toFixed(1) + ' ' + y(p.v).toFixed(1)).join(' ');
       const last = d.pts[d.pts.length - 1];
+      // keep the end label inside the plot: flip it to the left of the dot
+      // when the line ends close to the right edge
+      const flip = x(last.t) > W - padR - 20;
       return `
         <path d="${path}" fill="none" stroke="${d.series.color}" stroke-width="2"
           stroke-linejoin="round" stroke-linecap="round"/>
         <circle cx="${x(last.t)}" cy="${y(last.v)}" r="3" fill="${d.series.color}"/>
-        <text x="${x(last.t) + 7}" y="${y(last.v) + 4}" font-size="11" font-weight="600"
-          fill="var(--ink-2)">${d.series.label} ${MMath.money(last.v)}</text>`;
+        <text x="${x(last.t) + (flip ? -7 : 7)}" y="${y(last.v) + 4}" font-size="11" font-weight="600"
+          text-anchor="${flip ? 'end' : 'start'}" fill="var(--ink-2)">${d.series.label} ${MMath.money(last.v)}</text>`;
     }).join('');
 
     const legend = data.map(d => `
@@ -331,6 +341,9 @@ const Ledger = {
         <div class="tile"><div class="t-label">You vs Model</div>
           <div class="t-value">${s.flippedCount ? this.fmtRecord(s.you) + ' <span class="muted small">vs</span> ' + this.fmtRecord(s.model) : '—'}</div>
           <div class="t-sub">${s.flippedCount ? 'on your ' + s.flippedCount + ' flipped picks' : 'flip a pick on the card to start the duel'}</div></div>
+        <div class="tile fav-tile"><div class="t-label">🏈 ${App.short(s.fav)} bets</div>
+          <div class="t-value">${s.favCount ? this.fmtRecord(s.favRec) : '—'}</div>
+          <div class="t-sub">${s.favCount ? MMath.money(s.favRec.profit) + ' betting with your heart' : 'no ' + App.short(s.fav) + ' action yet'}</div></div>
         <div class="tile"><div class="t-label">Avg CLV (spread)</div>
           <div class="t-value ${s.avgClv > 0 ? 'pos' : s.avgClv < 0 ? 'neg' : ''}">${s.avgClv === null ? '—' : (s.avgClv > 0 ? '+' : '') + s.avgClv.toFixed(2) + ' pts'}</div>
           <div class="t-sub">beat the close = real edge</div></div>

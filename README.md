@@ -1,7 +1,12 @@
-# MarginAce ♠
+# MarginAce 🏈 — Big Blue Edition
 
-A personal NFL betting edge-finder and tracker. No install, no server, no account —
-one HTML page, your data stays in your browser.
+A personal NFL betting edge-finder and tracker, dressed in Giants navy and red.
+No install, no server, no account — one HTML page, your data stays in your browser.
+
+Personalized touches: a **Big Blue Watch** hero with the model's take on the next
+Giants game, Giants games highlighted across the app, and a "Giants bets" record
+in the Ledger (betting with your heart, quantified). Pick a different favorite
+team in Settings if a Cowboys fan ever borrows this.
 
 **What it will not do:** guarantee profit. NFL markets are sharp; the standard −110
 vig means you need 52.4% ATS just to break even. What MarginAce does is squeeze out

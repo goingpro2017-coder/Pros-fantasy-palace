@@ -17,6 +17,14 @@ const App = {
     return { fanduel: 'FanDuel', draftkings: 'DraftKings' }[key] || key || '—';
   },
 
+  fav() { return Store.data.settings.favoriteTeam; },
+  isFav(team) { return !!team && team === this.fav(); },
+  isFavGame(objWithTeams) {
+    return !!objWithTeams &&
+      (this.isFav(objWithTeams.home_team || objWithTeams.home) ||
+       this.isFav(objWithTeams.away_team || objWithTeams.away));
+  },
+
   weekOf(t) {
     const w = Math.floor((t - this.WEEK1) / (7 * 864e5)) + 1;
     return (w >= 1 && w <= 23) ? w : null;
@@ -140,6 +148,13 @@ const App = {
           <label for="set-cap">Weekly stake cap ($, soft warning)</label>
           <input type="number" id="set-cap" value="${s.weeklyCap}" min="0" step="5" style="width:100px">
         </div>
+        <div class="form-row">
+          <label for="set-fav">Your team 🏈</label>
+          <select id="set-fav">
+            ${Object.keys(Elo.SEED_2026).map(t =>
+              `<option value="${t}" ${t === s.favoriteTeam ? 'selected' : ''}>${t}</option>`).join('')}
+          </select>
+        </div>
         <button class="btn btn-primary" id="btn-save-settings">Save settings</button>
       </div>
 
@@ -173,6 +188,7 @@ const App = {
       s.apiKey = document.getElementById('set-apikey').value.trim();
       s.primaryBook = document.getElementById('set-primary').value;
       s.weeklyCap = parseFloat(document.getElementById('set-cap').value) || 0;
+      s.favoriteTeam = document.getElementById('set-fav').value;
       Store.save();
       this.banner('Settings saved.', 'good');
     };
@@ -231,7 +247,7 @@ const App = {
     document.getElementById('btn-refresh-scores').onclick = () => this.refreshScores();
 
     if (!Store.data.settings.apiKey) {
-      this.banner('Welcome to MarginAce. Grab a free API key at the-odds-api.com, drop it in Settings, and hit Refresh odds.', '');
+      this.banner('Welcome to MarginAce, Big Blue Edition. Grab a free API key at the-odds-api.com, drop it in Settings, and hit Refresh odds. 🏈', '');
       this.showTab('settings');
     } else {
       this.showTab('card');

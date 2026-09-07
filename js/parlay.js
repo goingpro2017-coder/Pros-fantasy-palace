@@ -162,8 +162,9 @@ const Parlay = {
 
     const options = events.map(ev => {
       const when = new Date(ev.commence_time).toLocaleString(undefined, { weekday: 'short', hour: 'numeric' });
+      const fav = App.isFavGame(ev) ? '🏈 ' : '';
       return `<option value="${ev.id}" ${ev.id === this.selectedEvent ? 'selected' : ''}>
-        ${App.short(ev.away_team)} @ ${App.short(ev.home_team)} (${when})</option>`;
+        ${fav}${App.short(ev.away_team)} @ ${App.short(ev.home_team)} (${when})</option>`;
     }).join('');
 
     let legButtons = '';

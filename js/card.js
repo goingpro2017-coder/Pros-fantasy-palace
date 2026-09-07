@@ -166,6 +166,7 @@ const Card = {
     const fetched = new Date(cache.fetchedAt).toLocaleString();
 
     el.innerHTML = `
+      ${this.renderHero()}
       <div class="card">
         <h2>Weekly Card — ${events.length} games</h2>
         <p class="sub">$1 against the spread + $1 straight up on every game.
@@ -185,6 +186,57 @@ const Card = {
     el.querySelectorAll('[data-flip]').forEach(b => {
       b.onclick = () => this.toggleFlip(b.dataset.event, b.dataset.flip);
     });
+  },
+
+  /* "Big Blue Watch" — the next game for the user's team, front and center. */
+  renderHero() {
+    const fav = App.fav();
+    if (!fav || !Store.data.oddsCache) return '';
+    const now = Date.now();
+    const next = Store.data.oddsCache.events
+      .filter(ev => Date.parse(ev.commence_time) > now && App.isFavGame(ev))
+      .sort((a, b) => Date.parse(a.commence_time) - Date.parse(b.commence_time))[0];
+
+    const nick = App.short(fav).toUpperCase();
+    const ratings = Object.entries(Elo.ensure().ratings).sort((a, b) => b[1] - a[1]);
+    const rank = ratings.findIndex(([t]) => t === fav) + 1;
+
+    if (!next) {
+      return `<div class="hero"><span class="hero-ball">🏈</span>
+        <div class="hero-kicker">Big Blue Watch</div>
+        <div class="hero-line">${nick} — no game in the feed</div>
+        <div class="hero-sub">Model rank: #${rank} of 32 · refresh odds closer to game week.</div>
+      </div>`;
+    }
+
+    const a = this.analyze(next);
+    const favIsHome = next.home_team === fav;
+    const opp = favIsHome ? next.away_team : next.home_team;
+    const when = new Date(next.commence_time)
+      .toLocaleString(undefined, { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    const favWinProb = favIsHome ? a.model.homeWinProb : 1 - a.model.homeWinProb;
+    const favModelSpread = favIsHome ? a.model.homeSpread : -a.model.homeSpread;
+    const favMarketSpread = a.marketSpread === null ? null : (favIsHome ? a.marketSpread : -a.marketSpread);
+
+    let take = '';
+    if (a.ats) {
+      const backing = a.ats.modelPickTeam === fav;
+      const favLine = favMarketSpread === null ? '' :
+        ' ' + (favMarketSpread > 0 ? '+' : '') + favMarketSpread;
+      take = backing
+        ? `Model says <b>back your boys</b>: ${nick}${favLine} against the spread · edge ${a.ats.edge.toFixed(1)} pts`
+        : `Model says <b>fade this one</b> (${App.short(a.ats.modelPickTeam)} covers, edge ${a.ats.edge.toFixed(1)} pts) — flip it on the card below if your heart won't allow it.`;
+    }
+
+    const fmt = p => (p > 0 ? '+' : '') + p;
+    return `<div class="hero"><span class="hero-ball">🏈</span>
+      <div class="hero-kicker">Big Blue Watch · #${rank} of 32 in the model</div>
+      <div class="hero-line">${nick} ${favIsHome ? 'vs' : '@'} ${App.short(opp).toUpperCase()}</div>
+      <div class="hero-sub">${when} ·
+        market ${favMarketSpread !== null ? nick + ' ' + fmt(favMarketSpread) : '—'} ·
+        model ${nick} ${fmt(Number(favModelSpread.toFixed(1)))} (${MMath.pct(favWinProb, 0)} to win)</div>
+      ${take ? `<div class="hero-take">${take}</div>` : ''}
+    </div>`;
   },
 
   renderGame(ev) {
@@ -224,11 +276,13 @@ const Card = {
         </div>`;
     }
 
+    const isFav = App.isFavGame(ev);
     return `
-      <div class="game-row">
+      <div class="game-row ${isFav ? 'fav-row' : ''}">
         <div>
           <div class="game-when">${when}</div>
-          <div class="game-teams">${App.short(ev.away_team)} @ ${App.short(ev.home_team)}</div>
+          <div class="game-teams">${App.short(ev.away_team)} @ ${App.short(ev.home_team)}
+            ${isFav ? ' <span class="pill bigblue">BIG BLUE</span>' : ''}</div>
           <div class="game-mkt">
             line: ${a.marketSpread !== null ? App.short(ev.home_team) + ' ' + fmtSpread(a.marketSpread) : '—'}
             ${total ? ' · O/U ' + total.point : ''}<br>

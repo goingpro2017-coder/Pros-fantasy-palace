@@ -58,9 +58,11 @@ const LineShop = {
           ${cell(market, name)}
         </tr>`;
 
+      const isFav = App.isFavGame(ev);
       return `
         <tr><td colspan="${books.length + 1}" style="padding-top:14px">
           <b>${App.short(ev.away_team)} @ ${App.short(ev.home_team)}</b>
+          ${isFav ? ' <span class="pill bigblue">BIG BLUE</span>' : ''}
           <span class="muted small"> ${when}</span></td></tr>
         ${side('ML', 'h2h', ev.away_team)}
         ${side('ML', 'h2h', ev.home_team)}

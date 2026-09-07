@@ -12,6 +12,7 @@ const Store = {
         books: ['fanduel', 'draftkings'],
         primaryBook: 'fanduel',
         weeklyCap: 50,
+        favoriteTeam: 'New York Giants',
       },
       elo: null,          // { ratings: {team: rating}, processed: [gameIds], seededAt }
       oddsCache: null,    // { fetchedAt, events: [...] }
