@@ -1,0 +1,59 @@
+/* localStorage-backed app state. Everything lives in one key so
+   export/import is a single JSON blob. */
+
+const Store = {
+  KEY: 'marginace.v1',
+  data: null,
+
+  defaults() {
+    return {
+      settings: {
+        apiKey: '',
+        books: ['fanduel', 'draftkings'],
+        primaryBook: 'fanduel',
+        weeklyCap: 50,
+      },
+      elo: null,          // { ratings: {team: rating}, processed: [gameIds], seededAt }
+      oddsCache: null,    // { fetchedAt, events: [...] }
+      closing: {},        // eventId -> { [market]: snapshot } last seen before kickoff
+      quota: null,        // { remaining, used, at }
+      bets: [],
+    };
+  },
+
+  load() {
+    let raw = null;
+    try { raw = JSON.parse(localStorage.getItem(this.KEY)); } catch (e) { raw = null; }
+    this.data = Object.assign(this.defaults(), raw || {});
+    this.data.settings = Object.assign(this.defaults().settings, (raw && raw.settings) || {});
+    return this.data;
+  },
+
+  save() {
+    try {
+      localStorage.setItem(this.KEY, JSON.stringify(this.data));
+    } catch (e) {
+      console.error('save failed', e);
+      App.banner('Could not save to browser storage: ' + e.message, 'error');
+    }
+  },
+
+  exportJson() {
+    return JSON.stringify(this.data, null, 2);
+  },
+
+  importJson(text) {
+    const parsed = JSON.parse(text); // throws on bad JSON
+    if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.bets)) {
+      throw new Error('Not a MarginAce export file');
+    }
+    this.data = Object.assign(this.defaults(), parsed);
+    this.save();
+  },
+
+  newId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  },
+};
+
+if (typeof module !== 'undefined' && module.exports) module.exports = Store;
