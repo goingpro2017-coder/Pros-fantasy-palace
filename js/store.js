@@ -13,12 +13,14 @@ const Store = {
         primaryBook: 'fanduel',
         weeklyCap: 50,
         favoriteTeam: 'New York Giants',
+        watcher: { intervalMin: 15, alertArbs: true, alertMiddles: true, keyOnly: true, minCredits: 20 },
       },
       elo: null,          // { ratings: {team: rating}, processed: [gameIds], seededAt }
       oddsCache: null,    // { fetchedAt, events: [...] }
       propsCache: {},     // eventId -> { fetchedAt, event } (per-event prop markets)
       closing: {},        // eventId -> { [market]: snapshot } last seen before kickoff
       quota: null,        // { remaining, used, at }
+      watcherSeen: {},    // opportunity signature -> firstSeenAt (dedupe alerts)
       bets: [],
     };
   },
@@ -28,6 +30,9 @@ const Store = {
     try { raw = JSON.parse(localStorage.getItem(this.KEY)); } catch (e) { raw = null; }
     this.data = Object.assign(this.defaults(), raw || {});
     this.data.settings = Object.assign(this.defaults().settings, (raw && raw.settings) || {});
+    this.data.settings.watcher = Object.assign(this.defaults().settings.watcher,
+      (raw && raw.settings && raw.settings.watcher) || {});
+    if (!this.data.watcherSeen) this.data.watcherSeen = {};
     return this.data;
   },
 

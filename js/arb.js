@@ -159,6 +159,7 @@ const Arb = {
 
     const { arbs, middles, holds } = this.scan();
     const fetched = new Date(Store.data.oddsCache.fetchedAt).toLocaleString();
+    const watcherCard = typeof Watcher !== 'undefined' ? Watcher.renderControl() : '';
 
     const arbRows = arbs.map(a => `
       <tr>
@@ -208,6 +209,7 @@ const Arb = {
       </tr>`).join('');
 
     el.innerHTML = `
+      ${watcherCard}
       <div class="card">
         <h2>Arb Finder 💰</h2>
         <p class="sub">Scanning FanDuel vs DraftKings as of ${fetched}. Straight talk: 2-book NFL arbs are rare —
@@ -231,5 +233,6 @@ const Arb = {
       this.total = Math.max(10, parseFloat(totalEl.value) || 100);
       this.render();
     };
+    if (typeof Watcher !== 'undefined') Watcher.wire();
   },
 };
