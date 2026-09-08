@@ -321,6 +321,24 @@ td.num, th.num { text-align: right; }
   pointer-events: none;
 }
 
+/* ---------- ring of honor ---------- */
+
+.legends-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+.legend-card {
+  text-align: center;
+  padding: 12px 8px 10px;
+  background: linear-gradient(180deg, rgba(11, 34, 101, 0.35), rgba(13, 23, 41, 0.1));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.legend-card svg { display: block; margin: 0 auto 6px; }
+.legend-name { font-family: var(--display); font-weight: 600; font-size: 14px; }
+.legend-note { color: var(--muted); font-size: 11px; margin-top: 2px; }
+
 /* ---------- weekly card ---------- */
 
 .game-row {

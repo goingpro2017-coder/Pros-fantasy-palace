@@ -192,7 +192,8 @@ const Card = {
         </div>
         <p class="sub" style="margin-top:6px">Paper-trading logs the model's picks with fake money so you can
           watch how accurate it really is — separate from your real bets, filterable in the Ledger.</p>
-      </div>`;
+      </div>
+      ${typeof Legends !== 'undefined' ? Legends.strip() : ''}`;
 
     const btn = document.getElementById('btn-lock-card');
     if (btn) btn.onclick = () => this.lockCard('real');
@@ -217,7 +218,7 @@ const Card = {
     const rank = ratings.findIndex(([t]) => t === fav) + 1;
 
     if (!next) {
-      return `<div class="hero"><span class="hero-ball">🏈</span>
+      return `<div class="hero">${typeof Legends !== "undefined" ? Legends.heroBadge() : ""}
         <div class="hero-kicker">Big Blue Watch</div>
         <div class="hero-line">${nick} — no game in the feed</div>
         <div class="hero-sub">Model rank: #${rank} of 32 · refresh odds closer to game week.</div>
@@ -244,7 +245,7 @@ const Card = {
     }
 
     const fmt = p => (p > 0 ? '+' : '') + p;
-    return `<div class="hero"><span class="hero-ball">🏈</span>
+    return `<div class="hero">${typeof Legends !== "undefined" ? Legends.heroBadge() : ""}
       <div class="hero-kicker">Big Blue Watch · #${rank} of 32 in the model</div>
       <div class="hero-line">${nick} ${favIsHome ? 'vs' : '@'} ${App.short(opp).toUpperCase()}</div>
       <div class="hero-sub">${when} ·
