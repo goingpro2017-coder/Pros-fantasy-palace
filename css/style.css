@@ -337,6 +337,68 @@ td.num, th.num { text-align: right; }
   pointer-events: none;
 }
 
+/* ---------- help / explanations ---------- */
+
+.term {
+  appearance: none;
+  cursor: pointer;
+  border: none;
+  width: 16px;
+  height: 16px;
+  line-height: 15px;
+  padding: 0;
+  margin-left: 3px;
+  border-radius: 50%;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--series-1);
+  vertical-align: middle;
+}
+.term:hover { filter: brightness(1.15); }
+
+.help-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: rgba(4, 8, 20, 0.72);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.help-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+}
+
+.guide-list { margin: 6px 0 14px; padding-left: 20px; }
+.guide-list li { margin-bottom: 8px; color: var(--ink-2); line-height: 1.5; }
+.guide-list b { color: var(--ink); }
+
+.glossary { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
+.gloss-row { display: flex; flex-direction: column; gap: 2px; }
+.gloss-row b { color: var(--series-1); font-size: 13px; }
+.gloss-row span { color: var(--ink-2); font-size: 13px; line-height: 1.45; }
+
+.help-cta {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--series-1);
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  font-size: 13px;
+  padding: 0;
+}
+
 /* ---------- weekly card ---------- */
 
 .game-row {

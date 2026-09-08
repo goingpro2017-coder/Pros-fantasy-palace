@@ -390,7 +390,7 @@ const Ledger = {
         <div class="tile fav-tile"><div class="t-label">🏈 ${App.short(s.fav)} bets</div>
           <div class="t-value">${s.favCount ? this.fmtRecord(s.favRec) : '—'}</div>
           <div class="t-sub">${s.favCount ? MMath.money(s.favRec.profit) + ' betting with your heart' : 'no ' + App.short(s.fav) + ' action yet'}</div></div>
-        <div class="tile"><div class="t-label">Avg CLV (spread)</div>
+        <div class="tile"><div class="t-label">Avg CLV ${typeof Help !== 'undefined' ? Help.chip('clv') : ''}</div>
           <div class="t-value ${s.avgClv > 0 ? 'pos' : s.avgClv < 0 ? 'neg' : ''}">${s.avgClv === null ? '—' : (s.avgClv > 0 ? '+' : '') + s.avgClv.toFixed(2) + ' pts'}</div>
           <div class="t-sub">beat the close = real edge</div></div>
       </div>`;

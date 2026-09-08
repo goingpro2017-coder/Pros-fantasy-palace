@@ -71,7 +71,8 @@ const App = {
   },
 
   renderTab(name) {
-    if (name === 'card') Card.render();
+    if (name === 'help') Help.render();
+    else if (name === 'card') Card.render();
     else if (name === 'lab') Parlay.render();
     else if (name === 'shop') LineShop.render();
     else if (name === 'arb') Arb.render();
@@ -259,6 +260,12 @@ const App = {
       const tab = e.target.closest('.tab');
       if (tab) this.showTab(tab.dataset.tab);
     });
+    // tap any "?" jargon chip anywhere in the app to get a plain explanation
+    document.body.addEventListener('click', e => {
+      const t = e.target.closest('[data-term]');
+      if (t) { e.preventDefault(); Help.showTerm(t.dataset.term); return; }
+      if (e.target.closest('[data-open-help]')) { e.preventDefault(); this.showTab('help'); }
+    });
     document.getElementById('btn-refresh-odds').onclick = () => this.refreshOdds();
     document.getElementById('btn-refresh-scores').onclick = () => this.refreshScores();
 
@@ -273,6 +280,7 @@ const App = {
     }
     this.renderQuota();
     this.renderSpend();
+    Help.maybeWelcome();
   },
 };
 

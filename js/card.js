@@ -176,8 +176,9 @@ const Card = {
       ${this.renderHero()}
       <div class="card">
         <h2>Weekly Card — ${events.length} games</h2>
-        <p class="sub">$1 against the spread + $1 straight up on every game.
-          Model picks shown; hit <b>flip</b> where your gut disagrees (tracked as You-vs-Model).
+        <p class="sub">The app's pick for every game — a <b>spread bet</b> and a <b>who-wins bet</b>.
+          Tap any <b>?</b> to learn a term. Disagree? Hit <b>flip</b> to take the other side.
+          <button class="help-cta" data-open-help>New here? See how it works →</button><br>
           Lines as of ${fetched}.</p>
         ${rows}
         <div style="margin-top:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
@@ -268,10 +269,10 @@ const Card = {
       const strength = a.ats.edge >= 2 ? 'good' : a.ats.edge >= 1 ? 'info' : '';
       atsBox = `
         <div class="pickbox ${a.ats.flipped ? 'flipped' : ''}">
-          <div class="pb-head">ATS pick ${a.ats.flipped ? '<span class="tag-user">(you)</span>' : '<span class="tag-model">(model)</span>'}</div>
+          <div class="pb-head">Spread bet ${Help.chip('ats')} ${a.ats.flipped ? '<span class="tag-user">(you)</span>' : '<span class="tag-model">(model)</span>'}</div>
           <div class="pb-pick">${App.short(a.ats.pickTeam)} ${fmtSpread(a.ats.point)} <span class="muted">(${MMath.formatAmerican(a.ats.price)} @ ${App.bookName(a.ats.book)})</span></div>
-          <div class="small">edge <span class="pill ${strength}">${a.ats.edge.toFixed(1)} pts</span>
-            cover ~${MMath.pct(a.ats.flipped ? 1 - a.ats.coverProb : a.ats.coverProb, 0)}</div>
+          <div class="small">edge ${Help.chip('edge')} <span class="pill ${strength}">${a.ats.edge.toFixed(1)} pts</span>
+            &nbsp;win chance ~${MMath.pct(a.ats.flipped ? 1 - a.ats.coverProb : a.ats.coverProb, 0)}</div>
           ${locked ? '' : `<button class="btn btn-sm" style="margin-top:5px" data-flip="ats" data-event="${ev.id}">⇄ flip</button>`}
         </div>`;
     }
@@ -284,9 +285,9 @@ const Card = {
         : '<span class="pill">fair price</span>';
       mlBox = `
         <div class="pickbox ${a.ml.flipped ? 'flipped' : ''}">
-          <div class="pb-head">Straight up ${a.ml.flipped ? '<span class="tag-user">(you)</span>' : '<span class="tag-model">(model)</span>'}</div>
+          <div class="pb-head">Who wins ${Help.chip('moneyline')} ${a.ml.flipped ? '<span class="tag-user">(you)</span>' : '<span class="tag-model">(model)</span>'}</div>
           <div class="pb-pick">${App.short(a.ml.pickTeam)} <span class="muted">(${MMath.formatAmerican(a.ml.price)} @ ${App.bookName(a.ml.book)})</span></div>
-          <div class="small">model ${MMath.pct(a.ml.modelProbOfPick, 0)} vs market ${a.ml.fairProb !== null ? MMath.pct(a.ml.fairProb, 0) : '—'} ${valueTag}</div>
+          <div class="small">app ${MMath.pct(a.ml.modelProbOfPick, 0)} vs Vegas ${a.ml.fairProb !== null ? MMath.pct(a.ml.fairProb, 0) : '—'} to win ${valueTag}</div>
           ${locked ? '' : `<button class="btn btn-sm" style="margin-top:5px" data-flip="ml" data-event="${ev.id}">⇄ flip</button>`}
         </div>`;
     }
