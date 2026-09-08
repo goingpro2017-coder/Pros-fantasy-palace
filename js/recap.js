@@ -134,7 +134,7 @@ const Recap = {
         <div class="t-sub">${sub || ''}</div></div>`;
 
     el.innerHTML = `
-      <div class="hero"><span class="hero-ball">🏈</span>
+      <div class="hero"><img class="hero-avatar" src="icon-512.png" alt="">
         <div class="hero-kicker">The damage report</div>
         <div class="hero-line">${wkLabel}</div>
         <div class="hero-sub">${s.bets.length} bets · ${MMath.money(s.staked)} staked${s.pending ? ` · ${s.pending} still pending` : ''}</div>

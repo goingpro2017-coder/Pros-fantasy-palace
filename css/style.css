@@ -73,17 +73,15 @@ h1, h2, .brand-name, .tab, .tile .t-value, .hero-line, .btn-primary {
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
 }
 
-.brand { display: flex; align-items: baseline; gap: 10px; }
-.brand-mark {
-  font-family: var(--display);
-  font-weight: 700;
-  font-size: 15px;
-  color: #fff;
-  background: var(--giants-red);
-  border-radius: 6px;
-  padding: 2px 7px 3px;
-  letter-spacing: 0.5px;
-  align-self: center;
+.brand { display: flex; align-items: center; gap: 11px; }
+.brand-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--giants-red-bright);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  flex: 0 0 auto;
 }
 .brand-name {
   font-size: 24px;
@@ -284,8 +282,26 @@ td.num, th.num { text-align: right; }
   border: 1px solid #2a4390;
   border-radius: var(--radius);
   padding: 18px 20px;
+  padding-right: 150px;
   margin-bottom: 16px;
   box-shadow: 0 8px 28px rgba(4, 10, 30, 0.6);
+}
+.hero .hero-avatar {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(200, 40, 63, 0.85);
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+}
+@media (max-width: 640px) {
+  .hero { padding-right: 108px; }
+  .hero .hero-avatar { width: 78px; height: 78px; right: 12px; }
 }
 .hero .hero-kicker {
   color: var(--giants-silver);

@@ -29,7 +29,16 @@ ${body}
 ${js}
 </script>`;
 
+// Inline local PNG images as data URIs — the artifact sandbox blocks
+// external image files but allows data: URIs.
+const inlined = out.replace(/src="(icon-\d+\.png|apple-touch-icon\.png|genie-src\.png)"/g, (m, file) => {
+  try {
+    const b64 = fs.readFileSync(path.join(root, file)).toString('base64');
+    return `src="data:image/png;base64,${b64}"`;
+  } catch (e) { return m; }
+});
+
 fs.mkdirSync(path.join(root, 'dist'), { recursive: true });
 const outPath = path.join(root, 'dist/pros-fantasy-palace-demo.html');
-fs.writeFileSync(outPath, out);
-console.log('wrote', outPath, '(' + Math.round(out.length / 1024) + ' KB), inlined', srcs.length, 'scripts');
+fs.writeFileSync(outPath, inlined);
+console.log('wrote', outPath, '(' + Math.round(inlined.length / 1024) + ' KB), inlined', srcs.length, 'scripts + images');
