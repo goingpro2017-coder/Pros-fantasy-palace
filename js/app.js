@@ -161,6 +161,13 @@ const App = {
       </div>
 
       <div class="card">
+        <h2>Try it out</h2>
+        <p class="sub">No key yet? Load a sample week of games — with a built-in arbitrage and a middle —
+          to explore every tab. Demo data is clearly marked and never spends a credit.</p>
+        <button class="btn" id="btn-load-demo">🎮 Load demo data</button>
+      </div>
+
+      <div class="card">
         <h2>Your data</h2>
         <p class="sub">Everything lives in this browser only. Export a backup now and then —
           clearing browser data wipes the ledger.</p>
@@ -194,6 +201,7 @@ const App = {
       Store.save();
       this.banner('Settings saved.', 'good');
     };
+    document.getElementById('btn-load-demo').onclick = () => Demo.load(false);
     document.getElementById('btn-show-key').onclick = () => {
       const inp = document.getElementById('set-apikey');
       inp.type = inp.type === 'password' ? 'text' : 'password';
@@ -241,6 +249,12 @@ const App = {
     Store.load();
     Elo.ensure();
 
+    // Demo builds (shared preview link): preload the sample slate so every
+    // tab has data, with no key and no network.
+    if (typeof Demo !== 'undefined' && Demo.isActive() && !Store.data.oddsCache) {
+      Demo.load(true);
+    }
+
     document.getElementById('tabs').addEventListener('click', e => {
       const tab = e.target.closest('.tab');
       if (tab) this.showTab(tab.dataset.tab);
@@ -248,8 +262,11 @@ const App = {
     document.getElementById('btn-refresh-odds').onclick = () => this.refreshOdds();
     document.getElementById('btn-refresh-scores').onclick = () => this.refreshScores();
 
-    if (!Store.data.settings.apiKey) {
-      this.banner("Welcome to Pro's Fantasy Palace, Big Blue Edition. Grab a free API key at the-odds-api.com, drop it in Settings, and hit Refresh odds. 🏈", '');
+    if (Demo.isActive()) {
+      this.banner('🎮 Demo mode — a sample week is loaded so you can explore every tab. Live odds and notifications need the hosted version with your API key.', '');
+      this.showTab('card');
+    } else if (!Store.data.settings.apiKey) {
+      this.banner("Welcome to Pro's Fantasy Palace, Big Blue Edition. New here? Tap “Load demo data” in Settings to explore with sample games, or grab a free API key at the-odds-api.com for live odds. 🏈", '');
       this.showTab('settings');
     } else {
       this.showTab('card');

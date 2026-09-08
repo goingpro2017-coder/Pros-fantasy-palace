@@ -1,0 +1,3607 @@
+<title>Pro's Fantasy Palace — Big Blue Edition</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* MarginAce — Big Blue Edition.
+   NY Giants navy/red/silver theme. Chart series palette is validated
+   (CVD-safe, 3:1 contrast) on the navy chart surface #0d1729. */
+
+:root {
+  color-scheme: dark;
+  /* Giants brand family */
+  --giants-navy: #0b2265;
+  --giants-red: #a71930;
+  --giants-red-bright: #c8283f;
+  --giants-silver: #a5acaf;
+
+  /* surfaces */
+  --page: #060b18;
+  --surface: #0d1729;
+  --surface-2: #16233f;
+  --surface-3: #1d2c4e;
+
+  /* ink */
+  --ink: #f4f6fa;
+  --ink-2: #c5cbd9;
+  --muted: #8b93a7;
+  --grid: #1c2946;
+  --baseline: #2b3a5e;
+  --border: rgba(125, 155, 220, 0.16);
+
+  /* chart series (validated on --surface) */
+  --series-1: #5b8ee8;   /* Big Blue — ATS card */
+  --series-2: #d9535f;   /* Giants red — ML card */
+  --series-3: #2aa79c;   /* teal — parlays */
+
+  /* status */
+  --good: #21b04b;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #e04848;
+
+  --radius: 12px;
+  --font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --display: "Oswald", "Arial Narrow", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background:
+    radial-gradient(1100px 500px at 85% -10%, rgba(11, 34, 101, 0.55), transparent 60%),
+    radial-gradient(900px 420px at -10% 0%, rgba(167, 25, 48, 0.18), transparent 55%),
+    var(--page);
+  background-attachment: fixed;
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+h1, h2, .brand-name, .tab, .tile .t-value, .hero-line, .btn-primary {
+  font-family: var(--display);
+}
+
+/* ---------- chrome ---------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 20px;
+  background: linear-gradient(180deg, #0e1f52 0%, #0a1735 100%);
+  border-bottom: 3px solid var(--giants-red);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+}
+
+.brand { display: flex; align-items: baseline; gap: 10px; }
+.brand-mark {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: 15px;
+  color: #fff;
+  background: var(--giants-red);
+  border-radius: 6px;
+  padding: 2px 7px 3px;
+  letter-spacing: 0.5px;
+  align-self: center;
+}
+.brand-name {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.brand-tag {
+  color: var(--giants-silver);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.topbar-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.quota { color: var(--muted); font-size: 12px; }
+
+.tabs {
+  display: flex;
+  gap: 2px;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(10, 20, 44, 0.85);
+  overflow-x: auto;
+}
+
+.tab {
+  appearance: none;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--ink-2);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 11px 15px 9px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tab:hover { color: var(--ink); }
+.tab.active { color: #fff; border-bottom-color: var(--giants-red-bright); }
+
+main { max-width: 1100px; margin: 0 auto; padding: 20px; }
+
+.footer {
+  max-width: 1100px;
+  margin: 24px auto 0;
+  padding: 12px 20px 28px;
+  color: var(--muted);
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.banner {
+  max-width: 1100px;
+  margin: 12px auto 0;
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--ink-2);
+}
+.banner.warn { border-color: var(--warning); color: var(--warning); }
+.banner.error { border-color: var(--critical); color: var(--critical); }
+.banner.good { border-color: var(--good); color: var(--good); }
+
+/* ---------- widgets ---------- */
+
+.btn {
+  appearance: none;
+  font: inherit;
+  font-weight: 600;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 12px;
+  cursor: pointer;
+  transition: border-color 0.12s, filter 0.12s;
+}
+.btn:hover { border-color: var(--giants-silver); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+.btn-primary {
+  background: linear-gradient(180deg, var(--giants-red-bright), var(--giants-red));
+  border-color: var(--giants-red);
+  color: #fff;
+  font-size: 14px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 10px rgba(167, 25, 48, 0.35);
+}
+.btn-primary:hover { filter: brightness(1.12); border-color: var(--giants-red-bright); }
+.btn-danger { border-color: var(--critical); color: var(--critical); background: none; }
+.btn-sm { padding: 3px 8px; font-size: 12px; border-radius: 6px; text-transform: none; letter-spacing: 0; }
+
+input, select {
+  font: inherit;
+  color: var(--ink);
+  background: var(--page);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 7px 10px;
+}
+input:focus, select:focus { outline: 2px solid var(--series-1); outline-offset: -1px; }
+label { color: var(--ink-2); font-size: 13px; }
+
+.card {
+  background: linear-gradient(180deg, rgba(22, 35, 63, 0.5), rgba(13, 23, 41, 0) 120px), var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+}
+
+.card h2 {
+  margin: 0 0 4px;
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.card h2::after {
+  content: "";
+  display: block;
+  width: 44px;
+  height: 3px;
+  margin-top: 5px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--giants-red-bright), var(--series-1));
+}
+.card h3 { margin: 16px 0 8px; font-size: 14px; color: var(--ink-2); }
+.card .sub { color: var(--muted); font-size: 12px; margin: 8px 0 12px; }
+
+.empty { color: var(--muted); text-align: center; padding: 32px 16px; }
+
+table.data { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+table.data th {
+  text-align: left;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--baseline);
+  white-space: nowrap;
+}
+table.data td { padding: 7px 8px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+table.data tr:last-child td { border-bottom: none; }
+.table-wrap { overflow-x: auto; }
+
+.num { text-align: right; }
+td.num, th.num { text-align: right; }
+
+/* pills & badges */
+.pill {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid var(--border);
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.pill.good { color: var(--good); border-color: var(--good); }
+.pill.bad { color: var(--critical); border-color: var(--critical); }
+.pill.warn { color: var(--warning); border-color: var(--warning); }
+.pill.info { color: var(--series-1); border-color: var(--series-1); }
+.pill.push { color: var(--muted); }
+.pill.bigblue {
+  color: #fff;
+  background: linear-gradient(90deg, var(--giants-navy), #143a8f);
+  border-color: #3a5cb8;
+  letter-spacing: 0.08em;
+}
+
+.best { color: var(--good); font-weight: 700; }
+.tag-model { color: var(--series-1); }
+.tag-user { color: var(--warning); }
+
+.pos { color: var(--good); }
+.neg { color: var(--critical); }
+.muted { color: var(--muted); }
+.small { font-size: 12px; }
+
+/* ---------- Big Blue hero ---------- */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background:
+    radial-gradient(600px 220px at 90% -30%, rgba(200, 40, 63, 0.28), transparent 60%),
+    linear-gradient(120deg, #0b2265 0%, #0c1c4e 55%, #0d1729 100%);
+  border: 1px solid #2a4390;
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 28px rgba(4, 10, 30, 0.6);
+}
+.hero .hero-kicker {
+  color: var(--giants-silver);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.hero .hero-line {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  margin: 4px 0 2px;
+}
+.hero .hero-sub { color: var(--ink-2); font-size: 13px; }
+.hero .hero-take {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(200, 40, 63, 0.16);
+  border: 1px solid rgba(200, 40, 63, 0.5);
+  font-weight: 600;
+}
+.hero .hero-ball {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%) rotate(12deg);
+  font-size: 64px;
+  opacity: 0.16;
+  pointer-events: none;
+}
+
+/* ---------- weekly card ---------- */
+
+.game-row {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr;
+  gap: 12px;
+  padding: 12px 8px;
+  border-bottom: 1px solid var(--grid);
+  align-items: start;
+}
+.game-row:last-child { border-bottom: none; }
+.game-row.fav-row {
+  background: linear-gradient(90deg, rgba(11, 34, 101, 0.45), rgba(11, 34, 101, 0.08));
+  border-left: 3px solid var(--giants-red-bright);
+  border-radius: 8px;
+}
+.game-when { color: var(--muted); font-size: 12px; }
+.game-teams { font-weight: 700; font-size: 15px; }
+.game-mkt { color: var(--ink-2); font-size: 12px; }
+
+.pickbox {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+}
+.pickbox .pb-head {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 3px;
+}
+.pickbox .pb-pick { font-weight: 700; }
+.pickbox.flipped { border-color: var(--warning); }
+
+@media (max-width: 800px) {
+  .game-row { grid-template-columns: 1fr 1fr; }
+}
+
+/* ---------- lightning lab ---------- */
+
+.leg-buttons { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.legs-list { margin-top: 8px; }
+.leg-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 6px;
+  background: var(--surface-2);
+}
+.corr-note {
+  padding: 6px 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  margin-top: 6px;
+  border: 1px solid var(--border);
+  color: var(--ink-2);
+}
+.corr-note.good { border-color: var(--good); color: var(--good); }
+.corr-note.warn { border-color: var(--warning); color: var(--warning); }
+.corr-note.bad { border-color: var(--critical); color: var(--critical); }
+
+.parlay-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+
+/* ---------- stat tiles ---------- */
+
+.tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.tile {
+  background: linear-gradient(180deg, rgba(22, 35, 63, 0.6), rgba(13, 23, 41, 0.2)), var(--surface);
+  border: 1px solid var(--border);
+  border-top: 2px solid var(--giants-navy);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+.tile .t-label {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.tile .t-value { font-size: 24px; font-weight: 600; margin-top: 2px; letter-spacing: 0.02em; }
+.tile .t-sub { color: var(--muted); font-size: 11px; margin-top: 2px; }
+.tile.fav-tile { border-top-color: var(--giants-red); }
+
+/* ---------- chart ---------- */
+
+.chart-box { position: relative; }
+.chart-box svg { display: block; width: 100%; height: auto; }
+.chart-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+  color: var(--ink-2);
+  font-size: 12px;
+}
+.chart-legend .swatch {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  margin-right: 5px;
+  vertical-align: -1px;
+}
+.chart-tooltip {
+  position: fixed;
+  z-index: 50;
+  pointer-events: none;
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: var(--ink);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.55);
+  max-width: 260px;
+}
+.chart-tooltip .tt-title { color: var(--muted); margin-bottom: 3px; }
+
+/* ---------- settings ---------- */
+
+.form-row { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+.form-row label { min-width: 160px; }
+.form-row input[type="text"], .form-row input[type="password"] { flex: 1; min-width: 220px; }
+
+</style>
+<header class="topbar">
+  <div class="brand">
+    <span class="brand-mark">ny</span>
+    <span class="brand-name">Pro's Fantasy Palace</span>
+    <span class="brand-tag">Big Blue Edition</span>
+  </div>
+  <div class="topbar-actions">
+    <span id="quota-badge" class="quota" title="The Odds API requests remaining this month"></span>
+    <button id="btn-refresh-odds" class="btn btn-primary">↻ Refresh odds</button>
+    <button id="btn-refresh-scores" class="btn">✓ Settle scores</button>
+  </div>
+</header>
+
+<div id="banner" class="banner" hidden></div>
+
+<nav class="tabs" id="tabs">
+  <button class="tab active" data-tab="card">Weekly Card</button>
+  <button class="tab" data-tab="lab">Lightning Lab</button>
+  <button class="tab" data-tab="shop">Line Shop</button>
+  <button class="tab" data-tab="arb">Arb Finder</button>
+  <button class="tab" data-tab="ledger">Ledger</button>
+  <button class="tab" data-tab="recap">Recap</button>
+  <button class="tab" data-tab="settings">Settings</button>
+</nav>
+
+<main>
+  <section id="tab-card" class="tab-panel"></section>
+  <section id="tab-lab" class="tab-panel" hidden></section>
+  <section id="tab-shop" class="tab-panel" hidden></section>
+  <section id="tab-arb" class="tab-panel" hidden></section>
+  <section id="tab-ledger" class="tab-panel" hidden></section>
+  <section id="tab-recap" class="tab-panel" hidden></section>
+  <section id="tab-settings" class="tab-panel" hidden></section>
+</main>
+
+<footer class="footer">
+  <p>Pro's Fantasy Palace is a tracking &amp; analysis tool, not betting advice. Sports betting involves risk and no model
+  guarantees profit. Bet only what you can afford to lose. 21+.
+  Problem? Call 1-800-GAMBLER.</p>
+</footer>
+
+<div id="tooltip" class="chart-tooltip" hidden></div>
+<script>window.PFP_DEMO = true;</script>
+<script>
+/* ==== js/math.js ==== */
+/* Pure betting math. No DOM, no state — also runs under Node for tests. */
+
+const MMath = {
+
+  /* ---- odds conversions ---- */
+
+  americanToDecimal(o) {
+    return o > 0 ? 1 + o / 100 : 1 + 100 / -o;
+  },
+
+  decimalToAmerican(d) {
+    if (d <= 1) return 0;
+    return d >= 2 ? Math.round((d - 1) * 100) : Math.round(-100 / (d - 1));
+  },
+
+  americanToImplied(o) {
+    return o > 0 ? 100 / (o + 100) : -o / (-o + 100);
+  },
+
+  impliedToAmerican(p) {
+    if (p <= 0 || p >= 1) return 0;
+    return this.decimalToAmerican(1 / p);
+  },
+
+  formatAmerican(o) {
+    if (o === null || o === undefined || isNaN(o)) return '—';
+    return o > 0 ? '+' + o : String(o);
+  },
+
+  /* Remove the vig from a two-way market: fair prob of side 1. */
+  devig(odds1, odds2) {
+    const p1 = this.americanToImplied(odds1);
+    const p2 = this.americanToImplied(odds2);
+    return p1 / (p1 + p2);
+  },
+
+  /* ---- parlay math ---- */
+
+  /* legs: [{price, fairProb}] — price in american odds, fairProb de-vigged.
+     Returns combined numbers assuming independent legs. */
+  parlay(legs) {
+    let dec = 1;
+    let trueProb = 1;
+    for (const leg of legs) {
+      dec *= this.americanToDecimal(leg.price);
+      trueProb *= (leg.fairProb !== undefined && leg.fairProb !== null)
+        ? leg.fairProb
+        : this.americanToImplied(leg.price);
+    }
+    const fairDecimal = trueProb > 0 ? 1 / trueProb : Infinity;
+    return {
+      decimal: dec,
+      american: this.decimalToAmerican(dec),
+      trueProb,
+      fairDecimal,
+      fairAmerican: this.decimalToAmerican(fairDecimal),
+      /* expected value per $1 staked (negative = house edge) */
+      evPer$: trueProb * dec - 1,
+      /* share of a fair payout the book is offering */
+      payoutShare: fairDecimal === Infinity ? 0 : dec / fairDecimal,
+    };
+  },
+
+  /* ---- model helpers ---- */
+
+  /* Elo difference (incl. home-field) -> home win probability */
+  eloWinProb(eloDiff) {
+    return 1 / (1 + Math.pow(10, -eloDiff / 400));
+  },
+
+  /* Elo difference -> point spread for the home team (negative = home favored) */
+  eloToSpread(eloDiff) {
+    return -eloDiff / 25;
+  },
+
+  /* Margin-of-victory Elo multiplier (FiveThirtyEight NFL formula) */
+  movMultiplier(pointMargin, winnerEloDiff) {
+    return Math.log(Math.abs(pointMargin) + 1) * (2.2 / (winnerEloDiff * 0.001 + 2.2));
+  },
+
+  /* Probability a side covers, from its point edge vs the market.
+     NFL margins ≈ normal with sd ~13.86; each point of edge is worth
+     roughly Φ(edge/sd) - 0.5 of cover probability. */
+  coverProb(pointEdge) {
+    return this.normCdf(pointEdge / 13.86);
+  },
+
+  normCdf(z) {
+    /* Abramowitz-Stegun approximation, plenty for display */
+    const t = 1 / (1 + 0.2316419 * Math.abs(z));
+    const d = 0.3989423 * Math.exp(-z * z / 2);
+    let p = d * t * (0.3193815 + t * (-0.3565638 + t * (1.781478 + t * (-1.821256 + t * 1.330274))));
+    return z > 0 ? 1 - p : p;
+  },
+
+  /* ---- arbitrage & middles ---- */
+
+  /* Two-way arb check. hold < 1 means guaranteed profit; the stake split
+     makes the return identical whichever side wins. */
+  arbTwoWay(priceA, priceB, total) {
+    const impA = this.americanToImplied(priceA);
+    const impB = this.americanToImplied(priceB);
+    const hold = impA + impB;
+    const t = total || 100;
+    return {
+      hold,
+      isArb: hold < 1,
+      profitPct: 1 / hold - 1,     // negative = the books' combined vig
+      stakeA: t * impA / hold,
+      stakeB: t * impB / hold,
+      guaranteedReturn: t / hold,
+      profit: t / hold - t,
+    };
+  },
+
+  /* ---- teasers ---- */
+
+  /* Tease a spread: you always get MORE points (or lay fewer). */
+  teaseSpread(point, pts) { return point + pts; },
+  /* Tease a total: Over comes down, Under goes up. */
+  teaseTotal(point, pts, isOver) { return isOver ? point - pts : point + pts; },
+
+  /* Wong teaser check (6pt+): the teased spread crosses BOTH key numbers
+     3 and 7 — underdogs +1.5 to +2.5, favorites -7.5 to -8.5. */
+  isWongLeg(point, teasePts) {
+    if (teasePts < 6) return false;
+    return (point >= 1.5 && point <= 2.5) || (point <= -7.5 && point >= -8.5);
+  },
+
+  /* Cover probability of a leg teased by `pts` from the market number
+     (which implies ~50%), under the normal-margin model. */
+  teasedCoverProb(pts) { return this.normCdf(pts / 13.86); },
+
+  /* ---- round robins ---- */
+
+  combinations(arr, k) {
+    if (k <= 0 || k > arr.length) return [];
+    if (k === 1) return arr.map(x => [x]);
+    const out = [];
+    const rec = (start, combo) => {
+      if (combo.length === k) { out.push(combo.slice()); return; }
+      for (let i = start; i <= arr.length - (k - combo.length); i++) {
+        combo.push(arr[i]);
+        rec(i + 1, combo);
+        combo.pop();
+      }
+    };
+    rec(0, []);
+    return out;
+  },
+
+  /* ---- money ---- */
+
+  money(v) {
+    const sign = v < 0 ? '-' : '';
+    return sign + '$' + Math.abs(v).toFixed(2);
+  },
+
+  pct(p, digits) {
+    return (p * 100).toFixed(digits === undefined ? 1 : digits) + '%';
+  },
+};
+
+/* Node (tests) */
+if (typeof module !== 'undefined' && module.exports) module.exports = MMath;
+
+;
+/* ==== js/demo.js ==== */
+/* Demo mode — a baked-in sample slate so the app can be explored with no
+   API key and no network (e.g. in a shared preview link). The data is
+   realistic and deliberately contains one cross-book arbitrage and one
+   key-number middle so the Arb Finder has something to show. */
+
+const Demo = {
+  book(key, spread, total, mlHome, mlAway, home, away, spreadPriceH, spreadPriceA) {
+    return {
+      key, title: key,
+      markets: [
+        { key: 'h2h', outcomes: [{ name: home, price: mlHome }, { name: away, price: mlAway }] },
+        { key: 'spreads', outcomes: [
+          { name: home, price: spreadPriceH || -110, point: spread },
+          { name: away, price: spreadPriceA || -110, point: -spread }] },
+        { key: 'totals', outcomes: [
+          { name: 'Over', price: -108, point: total },
+          { name: 'Under', price: -112, point: total }] },
+      ],
+    };
+  },
+
+  slate() {
+    const now = Date.now();
+    const day = 864e5;
+    const g = (id, offset, home, away, fd, dk) => ({
+      id, sport_key: 'americanfootball_nfl',
+      commence_time: new Date(now + offset).toISOString(),
+      home_team: home, away_team: away, bookmakers: [fd, dk],
+    });
+
+    return [
+      // Giants game — the Big Blue Watch headliner
+      g('demo-nyg', 2 * day + 6e5, 'New York Giants', 'Dallas Cowboys',
+        this.book('fanduel', 2.5, 45.5, 118, -140, 'New York Giants', 'Dallas Cowboys'),
+        this.book('draftkings', 3, 45.5, 122, -145, 'New York Giants', 'Dallas Cowboys')),
+      // cross-book ARBITRAGE on the moneyline: Bills +136 (FD) vs Chiefs +108 (DK)
+      g('demo-kc', 3 * day, 'Kansas City Chiefs', 'Buffalo Bills',
+        this.book('fanduel', -1.5, 48.5, -155, 136, 'Kansas City Chiefs', 'Buffalo Bills'),
+        this.book('draftkings', -2.5, 49, 108, -128, 'Kansas City Chiefs', 'Buffalo Bills')),
+      // spread gap crossing key number 7 -> a MIDDLE (Eagles by 6,7,8)
+      g('demo-phi', 3 * day + 3e5, 'Philadelphia Eagles', 'Washington Commanders',
+        this.book('fanduel', -9.5, 44.5, -420, 330, 'Philadelphia Eagles', 'Washington Commanders'),
+        this.book('draftkings', -5.5, 43.5, -410, 320, 'Philadelphia Eagles', 'Washington Commanders')),
+      g('demo-sf', 4 * day, 'San Francisco 49ers', 'Seattle Seahawks',
+        this.book('fanduel', -3.5, 47.5, -180, 152, 'San Francisco 49ers', 'Seattle Seahawks'),
+        this.book('draftkings', -3.5, 47, -175, 148, 'San Francisco 49ers', 'Seattle Seahawks')),
+      g('demo-bal', 4 * day + 3e5, 'Baltimore Ravens', 'Cincinnati Bengals',
+        this.book('fanduel', -6.5, 51.5, -280, 230, 'Baltimore Ravens', 'Cincinnati Bengals'),
+        this.book('draftkings', -6, 51.5, -270, 220, 'Baltimore Ravens', 'Cincinnati Bengals')),
+      g('demo-det', 5 * day, 'Detroit Lions', 'Green Bay Packers',
+        this.book('fanduel', -2.5, 49.5, -142, 120, 'Detroit Lions', 'Green Bay Packers'),
+        this.book('draftkings', -2.5, 49.5, -138, 118, 'Detroit Lions', 'Green Bay Packers')),
+    ];
+  },
+
+  propEvent() {
+    const slate = this.slate();
+    const kc = slate.find(e => e.id === 'demo-kc');
+    return {
+      id: 'demo-kc', home_team: kc.home_team, away_team: kc.away_team,
+      commence_time: kc.commence_time,
+      bookmakers: [{
+        key: 'fanduel', title: 'FanDuel',
+        markets: [
+          { key: 'player_pass_yds', outcomes: [
+            { name: 'Over', description: 'Patrick Mahomes', point: 278.5, price: -114 },
+            { name: 'Under', description: 'Patrick Mahomes', point: 278.5, price: -106 },
+            { name: 'Over', description: 'Josh Allen', point: 254.5, price: -110 },
+            { name: 'Under', description: 'Josh Allen', point: 254.5, price: -110 },
+          ] },
+          { key: 'player_anytime_td', outcomes: [
+            { name: 'Yes', description: 'Travis Kelce', price: 135 },
+            { name: 'Yes', description: 'James Cook', price: 120 },
+          ] },
+        ],
+      }],
+    };
+  },
+
+  load(silent) {
+    const now = Date.now();
+    const events = this.slate();
+    Store.data.oddsCache = { fetchedAt: now, events };
+    Store.data.propsCache = { 'demo-kc': { fetchedAt: now, event: this.propEvent() } };
+    Store.data.closing = {};
+    for (const ev of events) Store.data.closing[ev.id] = { at: now, event: ev };
+    Store.data.quota = { remaining: '—', used: '0', at: now };
+    Store.save();
+    if (!silent) {
+      App.banner('🎮 Demo slate loaded — 6 sample games with a built-in arb and a middle. Click around; nothing here spends money or needs a key.', 'good');
+      App.renderAll();
+    }
+  },
+
+  isActive() {
+    return typeof window !== 'undefined' && window.PFP_DEMO === true;
+  },
+};
+
+;
+/* ==== js/store.js ==== */
+/* localStorage-backed app state. Everything lives in one key so
+   export/import is a single JSON blob. */
+
+const Store = {
+  KEY: 'marginace.v1',
+  data: null,
+
+  defaults() {
+    return {
+      settings: {
+        apiKey: '',
+        books: ['fanduel', 'draftkings'],
+        primaryBook: 'fanduel',
+        weeklyCap: 50,
+        favoriteTeam: 'New York Giants',
+        watcher: { intervalMin: 15, alertArbs: true, alertMiddles: true, keyOnly: true, minCredits: 20 },
+      },
+      elo: null,          // { ratings: {team: rating}, processed: [gameIds], seededAt }
+      oddsCache: null,    // { fetchedAt, events: [...] }
+      propsCache: {},     // eventId -> { fetchedAt, event } (per-event prop markets)
+      closing: {},        // eventId -> { [market]: snapshot } last seen before kickoff
+      quota: null,        // { remaining, used, at }
+      watcherSeen: {},    // opportunity signature -> firstSeenAt (dedupe alerts)
+      bets: [],
+    };
+  },
+
+  load() {
+    let raw = null;
+    try { raw = JSON.parse(localStorage.getItem(this.KEY)); } catch (e) { raw = null; }
+    this.data = Object.assign(this.defaults(), raw || {});
+    this.data.settings = Object.assign(this.defaults().settings, (raw && raw.settings) || {});
+    this.data.settings.watcher = Object.assign(this.defaults().settings.watcher,
+      (raw && raw.settings && raw.settings.watcher) || {});
+    if (!this.data.watcherSeen) this.data.watcherSeen = {};
+    return this.data;
+  },
+
+  save() {
+    try {
+      localStorage.setItem(this.KEY, JSON.stringify(this.data));
+    } catch (e) {
+      console.error('save failed', e);
+      App.banner('Could not save to browser storage: ' + e.message, 'error');
+    }
+  },
+
+  exportJson() {
+    return JSON.stringify(this.data, null, 2);
+  },
+
+  importJson(text) {
+    const parsed = JSON.parse(text); // throws on bad JSON
+    if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.bets)) {
+      throw new Error("Not a Pro's Fantasy Palace export file");
+    }
+    this.data = Object.assign(this.defaults(), parsed);
+    this.save();
+  },
+
+  newId() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+  },
+};
+
+if (typeof module !== 'undefined' && module.exports) module.exports = Store;
+
+;
+/* ==== js/api.js ==== */
+/* The Odds API v4 client. Free tier = 500 credits/month.
+   One odds refresh (3 markets x 1 US region) costs 3 credits;
+   one scores refresh costs 2. The header quota is shown in the top bar. */
+
+const Api = {
+  BASE: 'https://api.the-odds-api.com/v4/sports/americanfootball_nfl',
+
+  async request(path, params) {
+    const key = Store.data.settings.apiKey.trim();
+    if (!key) throw new Error('No API key set. Add your free key from the-odds-api.com in Settings.');
+    const url = new URL(this.BASE + path);
+    url.searchParams.set('apiKey', key);
+    for (const k in params) url.searchParams.set(k, params[k]);
+
+    const res = await fetch(url.toString());
+    const remaining = res.headers.get('x-requests-remaining');
+    const used = res.headers.get('x-requests-used');
+    if (remaining !== null) {
+      Store.data.quota = { remaining, used, at: Date.now() };
+    }
+    if (!res.ok) {
+      let msg = 'API error ' + res.status;
+      try { msg += ': ' + ((await res.json()).message || ''); } catch (e) { /* keep base msg */ }
+      throw new Error(msg);
+    }
+    return res.json();
+  },
+
+  async fetchOdds() {
+    const events = await this.request('/odds', {
+      regions: 'us',
+      markets: 'h2h,spreads,totals',
+      oddsFormat: 'american',
+      bookmakers: Store.data.settings.books.join(','),
+    });
+    Store.data.oddsCache = { fetchedAt: Date.now(), events };
+    this.snapshotClosing(events);
+    Store.save();
+    return events;
+  },
+
+  /* Player prop markets pulled on demand, one game at a time —
+     each fetch costs (number of markets) credits, so it's a button,
+     not part of the weekly refresh. */
+  PROP_MARKETS: [
+    { key: 'player_pass_yds', label: 'Pass yds' },
+    { key: 'player_pass_tds', label: 'Pass TDs' },
+    { key: 'player_rush_yds', label: 'Rush yds' },
+    { key: 'player_reception_yds', label: 'Rec yds' },
+    { key: 'player_receptions', label: 'Receptions' },
+    { key: 'player_anytime_td', label: 'Anytime TD' },
+  ],
+
+  async fetchEventProps(eventId) {
+    const event = await this.request('/events/' + eventId + '/odds', {
+      regions: 'us',
+      markets: this.PROP_MARKETS.map(m => m.key).join(','),
+      oddsFormat: 'american',
+      bookmakers: Store.data.settings.books.join(','),
+    });
+    Store.data.propsCache[eventId] = { fetchedAt: Date.now(), event };
+    // prune prop caches for games that have started
+    for (const id in Store.data.propsCache) {
+      const e = Store.data.propsCache[id].event;
+      if (e && Date.parse(e.commence_time) < Date.now() - 864e5) delete Store.data.propsCache[id];
+    }
+    Store.save();
+    return event;
+  },
+
+  async fetchScores() {
+    const games = await this.request('/scores', { daysFrom: 3 });
+    Store.save(); // persist quota
+    return games;
+  },
+
+  /* Keep the freshest pre-kickoff snapshot of every event, so we have a
+     "closing line" to grade CLV against once the game starts. */
+  snapshotClosing(events) {
+    const now = Date.now();
+    for (const ev of events) {
+      const kick = Date.parse(ev.commence_time);
+      if (now < kick) {
+        Store.data.closing[ev.id] = { at: now, event: ev };
+      }
+    }
+    // prune snapshots for games older than ~10 days
+    for (const id in Store.data.closing) {
+      const snap = Store.data.closing[id];
+      if (now - Date.parse(snap.event.commence_time) > 10 * 864e5) delete Store.data.closing[id];
+    }
+  },
+
+  /* ---- odds extraction helpers ---- */
+
+  book(ev, bookKey) {
+    return (ev.bookmakers || []).find(b => b.key === bookKey) || null;
+  },
+
+  market(ev, bookKey, marketKey) {
+    const b = this.book(ev, bookKey);
+    if (!b) return null;
+    return (b.markets || []).find(m => m.key === marketKey) || null;
+  },
+
+  outcome(ev, bookKey, marketKey, name) {
+    const m = this.market(ev, bookKey, marketKey);
+    if (!m) return null;
+    return (m.outcomes || []).find(o => o.name === name) || null;
+  },
+
+  /* Outcome from primary book, falling back to the other book. */
+  outcomeAny(ev, marketKey, name) {
+    const books = [Store.data.settings.primaryBook,
+      ...Store.data.settings.books.filter(b => b !== Store.data.settings.primaryBook)];
+    for (const bk of books) {
+      const o = this.outcome(ev, bk, marketKey, name);
+      if (o) return Object.assign({ book: bk }, o);
+    }
+    return null;
+  },
+
+  /* Best price for one side across configured books. */
+  bestOutcome(ev, marketKey, name, point) {
+    let best = null;
+    for (const bk of Store.data.settings.books) {
+      const m = this.market(ev, bk, marketKey);
+      if (!m) continue;
+      for (const o of m.outcomes || []) {
+        if (o.name !== name) continue;
+        if (point !== undefined && point !== null && o.point !== point) continue;
+        if (!best || o.price > best.price) best = Object.assign({ book: bk }, o);
+      }
+    }
+    return best;
+  },
+
+  /* Best spread quote for one side across books: more points on your side
+     beats price (+2.5 > +1.5, and -1.5 > -2.5); price breaks ties. */
+  bestSpread(ev, name) {
+    let best = null;
+    for (const bk of Store.data.settings.books) {
+      const m = this.market(ev, bk, 'spreads');
+      if (!m) continue;
+      for (const o of m.outcomes || []) {
+        if (o.name !== name || o.point === undefined) continue;
+        if (!best || o.point > best.point ||
+            (o.point === best.point && o.price > best.price)) {
+          best = Object.assign({ book: bk }, o);
+        }
+      }
+    }
+    return best;
+  },
+
+  /* De-vigged fair probability for an outcome in a two-way market. */
+  fairProb(ev, bookKey, marketKey, name) {
+    const m = this.market(ev, bookKey, marketKey);
+    if (!m || !m.outcomes || m.outcomes.length < 2) return null;
+    const mine = m.outcomes.find(o => o.name === name);
+    const other = m.outcomes.find(o => o.name !== name);
+    if (!mine || !other) return null;
+    return MMath.devig(mine.price, other.price);
+  },
+};
+
+;
+/* ==== js/elo.js ==== */
+/* Elo power ratings — the prediction model behind the Weekly Card.
+
+   Seeded with 2026 preseason ratings (2025 results regressed toward the
+   mean, in the style of FiveThirtyEight's NFL Elo). The seed is only a
+   starting point: every time you hit "Settle scores" the ratings update
+   from final scores with a margin-of-victory multiplier, so the model
+   corrects itself as the season goes on. ~25 Elo points = 1 point of
+   spread; home field is worth HFA Elo (~1.9 points). */
+
+const Elo = {
+  K: 20,
+  HFA: 48,
+  MEAN: 1505,
+
+  SEED_2026: {
+    'Arizona Cardinals': 1470,
+    'Atlanta Falcons': 1470,
+    'Baltimore Ravens': 1600,
+    'Buffalo Bills': 1640,
+    'Carolina Panthers': 1480,
+    'Chicago Bears': 1550,
+    'Cincinnati Bengals': 1500,
+    'Cleveland Browns': 1420,
+    'Dallas Cowboys': 1500,
+    'Denver Broncos': 1615,
+    'Detroit Lions': 1615,
+    'Green Bay Packers': 1600,
+    'Houston Texans': 1540,
+    'Indianapolis Colts': 1560,
+    'Jacksonville Jaguars': 1545,
+    'Kansas City Chiefs': 1610,
+    'Las Vegas Raiders': 1420,
+    'Los Angeles Chargers': 1585,
+    'Los Angeles Rams': 1620,
+    'Miami Dolphins': 1450,
+    'Minnesota Vikings': 1510,
+    'New England Patriots': 1620,
+    'New Orleans Saints': 1390,
+    'New York Giants': 1440,
+    'New York Jets': 1430,
+    'Philadelphia Eagles': 1625,
+    'Pittsburgh Steelers': 1520,
+    'San Francisco 49ers': 1570,
+    'Seattle Seahawks': 1610,
+    'Tampa Bay Buccaneers': 1560,
+    'Tennessee Titans': 1400,
+    'Washington Commanders': 1530,
+  },
+
+  ensure() {
+    if (!Store.data.elo) {
+      Store.data.elo = {
+        ratings: Object.assign({}, this.SEED_2026),
+        processed: [],
+        seededAt: Date.now(),
+      };
+      Store.save();
+    }
+    return Store.data.elo;
+  },
+
+  rating(team) {
+    const elo = this.ensure();
+    if (!(team in elo.ratings)) elo.ratings[team] = this.MEAN; // unknown name — neutral
+    return elo.ratings[team];
+  },
+
+  /* Model view of a matchup. */
+  predict(homeTeam, awayTeam) {
+    const diff = this.rating(homeTeam) - this.rating(awayTeam) + this.HFA;
+    return {
+      homeWinProb: MMath.eloWinProb(diff),
+      homeSpread: MMath.eloToSpread(diff), // negative = home favored
+    };
+  },
+
+  /* Update ratings from completed games (The Odds API /scores payload).
+     Each game is applied exactly once. Returns count applied. */
+  applyScores(games) {
+    const elo = this.ensure();
+    const done = new Set(elo.processed);
+    let applied = 0;
+
+    for (const g of games) {
+      if (!g.completed || done.has(g.id) || !g.scores) continue;
+      const hs = g.scores.find(s => s.name === g.home_team);
+      const as = g.scores.find(s => s.name === g.away_team);
+      if (!hs || !as) continue;
+
+      const homePts = Number(hs.score), awayPts = Number(as.score);
+      const margin = homePts - awayPts;
+      const diff = this.rating(g.home_team) - this.rating(g.away_team) + this.HFA;
+      const expHome = MMath.eloWinProb(diff);
+      const actHome = margin > 0 ? 1 : margin < 0 ? 0 : 0.5;
+      const winnerDiff = margin >= 0 ? diff : -diff;
+      const mult = margin === 0 ? 1 : MMath.movMultiplier(margin, winnerDiff);
+      const delta = this.K * mult * (actHome - expHome);
+
+      elo.ratings[g.home_team] = this.rating(g.home_team) + delta;
+      elo.ratings[g.away_team] = this.rating(g.away_team) - delta;
+      done.add(g.id);
+      applied++;
+    }
+
+    elo.processed = [...done].slice(-500); // keep the list bounded
+    Store.save();
+    return applied;
+  },
+};
+
+if (typeof module !== 'undefined' && module.exports) module.exports = Elo;
+
+;
+/* ==== js/card.js ==== */
+/* Weekly Card — $1 ATS + $1 moneyline on every game of the week.
+   Model makes the picks; you can flip any of them before locking.
+   "You vs model" is tracked in the Ledger. */
+
+const Card = {
+  flips: {}, // eventId -> { ats: bool, ml: bool } user disagreement with the model
+
+  upcomingEvents() {
+    const cache = Store.data.oddsCache;
+    if (!cache) return [];
+    const now = Date.now();
+    const horizon = now + 8 * 864e5;
+    return cache.events
+      .filter(ev => {
+        const t = Date.parse(ev.commence_time);
+        return t > now && t < horizon;
+      })
+      .sort((a, b) => Date.parse(a.commence_time) - Date.parse(b.commence_time));
+  },
+
+  /* Model + market view of one event. */
+  analyze(ev) {
+    const model = Elo.predict(ev.home_team, ev.away_team);
+    const primary = Store.data.settings.primaryBook;
+
+    // market spread: home team's point at the primary book (fallback other book)
+    const homeSpreadO = Api.outcomeAny(ev, 'spreads', ev.home_team);
+    const marketSpread = homeSpreadO ? homeSpreadO.point : null;
+
+    let ats = null;
+    if (marketSpread !== null) {
+      // edge for the HOME side = market line minus model line
+      const homeEdge = marketSpread - model.homeSpread;
+      const pickHome = homeEdge > 0;
+      const modelPickTeam = pickHome ? ev.home_team : ev.away_team;
+      const flipped = this.flips[ev.id] && this.flips[ev.id].ats;
+      const pickTeam = flipped
+        ? (modelPickTeam === ev.home_team ? ev.away_team : ev.home_team)
+        : modelPickTeam;
+      const best = Api.bestSpread(ev, pickTeam);
+      ats = {
+        modelPickTeam,
+        pickTeam,
+        flipped: !!flipped,
+        edge: Math.abs(homeEdge),
+        coverProb: MMath.coverProb(Math.abs(homeEdge)),
+        point: best ? best.point : (pickTeam === ev.home_team ? marketSpread : -marketSpread),
+        price: best ? best.price : -110,
+        book: best ? best.book : primary,
+      };
+    }
+
+    // moneyline: model's predicted winner, plus a value check vs de-vigged market
+    const modelWinner = model.homeWinProb >= 0.5 ? ev.home_team : ev.away_team;
+    const modelWinProb = model.homeWinProb >= 0.5 ? model.homeWinProb : 1 - model.homeWinProb;
+    const flippedMl = this.flips[ev.id] && this.flips[ev.id].ml;
+    const mlPickTeam = flippedMl
+      ? (modelWinner === ev.home_team ? ev.away_team : ev.home_team)
+      : modelWinner;
+    const mlBest = Api.bestOutcome(ev, 'h2h', mlPickTeam);
+    const mlFair = Api.fairProb(ev, mlBest ? mlBest.book : primary, 'h2h', mlPickTeam);
+    const pickModelProb = mlPickTeam === ev.home_team ? model.homeWinProb : 1 - model.homeWinProb;
+
+    return {
+      model,
+      marketSpread,
+      ats,
+      ml: mlBest ? {
+        modelWinner, modelWinProb,
+        pickTeam: mlPickTeam,
+        flipped: !!flippedMl,
+        price: mlBest.price,
+        book: mlBest.book,
+        fairProb: mlFair,
+        modelProbOfPick: pickModelProb,
+        value: mlFair !== null ? pickModelProb - mlFair : null,
+      } : null,
+    };
+  },
+
+  toggleFlip(eventId, kind) {
+    this.flips[eventId] = this.flips[eventId] || {};
+    this.flips[eventId][kind] = !this.flips[eventId][kind];
+    this.render();
+  },
+
+  hasCardBet(eventId, category, mode) {
+    return Store.data.bets.some(b => b.eventId === eventId && b.category === category &&
+      (b.mode || 'real') === mode);
+  },
+
+  lockCard(mode) {
+    const events = this.upcomingEvents();
+    let created = 0;
+    for (const ev of events) {
+      const a = this.analyze(ev);
+      const base = {
+        createdAt: Date.now(),
+        week: App.weekOf(Date.parse(ev.commence_time)),
+        eventId: ev.id,
+        kickoff: ev.commence_time,
+        home: ev.home_team,
+        away: ev.away_team,
+        stake: 1,
+        status: 'pending',
+        mode,
+      };
+      if (a.ats && !this.hasCardBet(ev.id, 'card-ats', mode)) {
+        Store.data.bets.push(Object.assign({}, base, {
+          id: Store.newId(),
+          type: 'ats',
+          category: 'card-ats',
+          pick: a.ats.pickTeam,
+          point: a.ats.point,
+          price: a.ats.price,
+          book: a.ats.book,
+          source: a.ats.flipped ? 'user' : 'model',
+          modelPick: a.ats.modelPickTeam,
+        }));
+        created++;
+      }
+      if (a.ml && !this.hasCardBet(ev.id, 'card-ml', mode)) {
+        Store.data.bets.push(Object.assign({}, base, {
+          id: Store.newId(),
+          type: 'ml',
+          category: 'card-ml',
+          pick: a.ml.pickTeam,
+          point: null,
+          price: a.ml.price,
+          book: a.ml.book,
+          source: a.ml.flipped ? 'user' : 'model',
+          modelPick: a.ml.modelWinner,
+        }));
+        created++;
+      }
+    }
+    Store.save();
+    if (!created) {
+      App.banner(`Nothing new to ${mode === 'paper' ? 'paper-track' : 'lock'} — this week's ${mode} card is already in the Ledger.`, '');
+    } else if (mode === 'paper') {
+      App.banner(`📋 Paper-tracking ${created} model picks — no money down. Settle scores each week and check the Ledger's Paper filter to see how the model does.`, 'good');
+    } else {
+      App.banner(`🔒 Locked ${created} real card bets ($${created} total). Place them at the listed books, then track them in the Ledger.`, 'good');
+    }
+    this.render();
+    App.renderSpend();
+  },
+
+  render() {
+    const el = document.getElementById('tab-card');
+    const events = this.upcomingEvents();
+    const cache = Store.data.oddsCache;
+
+    if (!cache) {
+      el.innerHTML = `<div class="card"><div class="empty">
+        No odds loaded yet. Add your API key in <b>Settings</b>, then hit <b>↻ Refresh odds</b>.
+      </div></div>`;
+      return;
+    }
+    if (!events.length) {
+      el.innerHTML = `<div class="card"><div class="empty">
+        No upcoming games in the next 8 days. Refresh odds closer to game week.
+      </div></div>`;
+      return;
+    }
+
+    const lockedReal = events.every(ev =>
+      this.hasCardBet(ev.id, 'card-ats', 'real') && this.hasCardBet(ev.id, 'card-ml', 'real'));
+    const lockedPaper = events.every(ev =>
+      this.hasCardBet(ev.id, 'card-ats', 'paper') && this.hasCardBet(ev.id, 'card-ml', 'paper'));
+
+    const rows = events.map(ev => this.renderGame(ev)).join('');
+    const fetched = new Date(cache.fetchedAt).toLocaleString();
+
+    el.innerHTML = `
+      ${this.renderHero()}
+      <div class="card">
+        <h2>Weekly Card — ${events.length} games</h2>
+        <p class="sub">$1 against the spread + $1 straight up on every game.
+          Model picks shown; hit <b>flip</b> where your gut disagrees (tracked as You-vs-Model).
+          Lines as of ${fetched}.</p>
+        ${rows}
+        <div style="margin-top:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="btn-lock-card" ${lockedReal ? 'disabled' : ''}>
+            🔒 Lock as real bets (${events.length * 2} × $1)
+          </button>
+          <button class="btn" id="btn-paper-card" ${lockedPaper ? 'disabled' : ''}>
+            📋 Paper-trade the card (no money)
+          </button>
+          ${lockedReal ? '<span class="muted small">Real card locked.</span>' : ''}
+          ${lockedPaper ? '<span class="muted small">Paper card tracking.</span>' : ''}
+        </div>
+        <p class="sub" style="margin-top:6px">Paper-trading logs the model's picks with fake money so you can
+          watch how accurate it really is — separate from your real bets, filterable in the Ledger.</p>
+      </div>`;
+
+    const btn = document.getElementById('btn-lock-card');
+    if (btn) btn.onclick = () => this.lockCard('real');
+    const paperBtn = document.getElementById('btn-paper-card');
+    if (paperBtn) paperBtn.onclick = () => this.lockCard('paper');
+    el.querySelectorAll('[data-flip]').forEach(b => {
+      b.onclick = () => this.toggleFlip(b.dataset.event, b.dataset.flip);
+    });
+  },
+
+  /* "Big Blue Watch" — the next game for the user's team, front and center. */
+  renderHero() {
+    const fav = App.fav();
+    if (!fav || !Store.data.oddsCache) return '';
+    const now = Date.now();
+    const next = Store.data.oddsCache.events
+      .filter(ev => Date.parse(ev.commence_time) > now && App.isFavGame(ev))
+      .sort((a, b) => Date.parse(a.commence_time) - Date.parse(b.commence_time))[0];
+
+    const nick = App.short(fav).toUpperCase();
+    const ratings = Object.entries(Elo.ensure().ratings).sort((a, b) => b[1] - a[1]);
+    const rank = ratings.findIndex(([t]) => t === fav) + 1;
+
+    if (!next) {
+      return `<div class="hero"><span class="hero-ball">🏈</span>
+        <div class="hero-kicker">Big Blue Watch</div>
+        <div class="hero-line">${nick} — no game in the feed</div>
+        <div class="hero-sub">Model rank: #${rank} of 32 · refresh odds closer to game week.</div>
+      </div>`;
+    }
+
+    const a = this.analyze(next);
+    const favIsHome = next.home_team === fav;
+    const opp = favIsHome ? next.away_team : next.home_team;
+    const when = new Date(next.commence_time)
+      .toLocaleString(undefined, { weekday: 'long', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    const favWinProb = favIsHome ? a.model.homeWinProb : 1 - a.model.homeWinProb;
+    const favModelSpread = favIsHome ? a.model.homeSpread : -a.model.homeSpread;
+    const favMarketSpread = a.marketSpread === null ? null : (favIsHome ? a.marketSpread : -a.marketSpread);
+
+    let take = '';
+    if (a.ats) {
+      const backing = a.ats.modelPickTeam === fav;
+      const favLine = favMarketSpread === null ? '' :
+        ' ' + (favMarketSpread > 0 ? '+' : '') + favMarketSpread;
+      take = backing
+        ? `Model says <b>back your boys</b>: ${nick}${favLine} against the spread · edge ${a.ats.edge.toFixed(1)} pts`
+        : `Model says <b>fade this one</b> (${App.short(a.ats.modelPickTeam)} covers, edge ${a.ats.edge.toFixed(1)} pts) — flip it on the card below if your heart won't allow it.`;
+    }
+
+    const fmt = p => (p > 0 ? '+' : '') + p;
+    return `<div class="hero"><span class="hero-ball">🏈</span>
+      <div class="hero-kicker">Big Blue Watch · #${rank} of 32 in the model</div>
+      <div class="hero-line">${nick} ${favIsHome ? 'vs' : '@'} ${App.short(opp).toUpperCase()}</div>
+      <div class="hero-sub">${when} ·
+        market ${favMarketSpread !== null ? nick + ' ' + fmt(favMarketSpread) : '—'} ·
+        model ${nick} ${fmt(Number(favModelSpread.toFixed(1)))} (${MMath.pct(favWinProb, 0)} to win)</div>
+      ${take ? `<div class="hero-take">${take}</div>` : ''}
+    </div>`;
+  },
+
+  renderGame(ev) {
+    const a = this.analyze(ev);
+    const when = new Date(ev.commence_time)
+      .toLocaleString(undefined, { weekday: 'short', month: 'numeric', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+    const total = Api.outcomeAny(ev, 'totals', 'Over');
+    const locked = this.hasCardBet(ev.id, 'card-ats') || this.hasCardBet(ev.id, 'card-ml');
+
+    const fmtSpread = p => (p > 0 ? '+' : '') + p;
+
+    let atsBox = '<div class="pickbox muted">no spread posted</div>';
+    if (a.ats) {
+      const strength = a.ats.edge >= 2 ? 'good' : a.ats.edge >= 1 ? 'info' : '';
+      atsBox = `
+        <div class="pickbox ${a.ats.flipped ? 'flipped' : ''}">
+          <div class="pb-head">ATS pick ${a.ats.flipped ? '<span class="tag-user">(you)</span>' : '<span class="tag-model">(model)</span>'}</div>
+          <div class="pb-pick">${App.short(a.ats.pickTeam)} ${fmtSpread(a.ats.point)} <span class="muted">(${MMath.formatAmerican(a.ats.price)} @ ${App.bookName(a.ats.book)})</span></div>
+          <div class="small">edge <span class="pill ${strength}">${a.ats.edge.toFixed(1)} pts</span>
+            cover ~${MMath.pct(a.ats.flipped ? 1 - a.ats.coverProb : a.ats.coverProb, 0)}</div>
+          ${locked ? '' : `<button class="btn btn-sm" style="margin-top:5px" data-flip="ats" data-event="${ev.id}">⇄ flip</button>`}
+        </div>`;
+    }
+
+    let mlBox = '<div class="pickbox muted">no moneyline posted</div>';
+    if (a.ml) {
+      const valueTag = a.ml.value === null ? ''
+        : a.ml.value > 0.02 ? '<span class="pill good">value</span>'
+        : a.ml.value < -0.05 ? '<span class="pill warn">priced against you</span>'
+        : '<span class="pill">fair price</span>';
+      mlBox = `
+        <div class="pickbox ${a.ml.flipped ? 'flipped' : ''}">
+          <div class="pb-head">Straight up ${a.ml.flipped ? '<span class="tag-user">(you)</span>' : '<span class="tag-model">(model)</span>'}</div>
+          <div class="pb-pick">${App.short(a.ml.pickTeam)} <span class="muted">(${MMath.formatAmerican(a.ml.price)} @ ${App.bookName(a.ml.book)})</span></div>
+          <div class="small">model ${MMath.pct(a.ml.modelProbOfPick, 0)} vs market ${a.ml.fairProb !== null ? MMath.pct(a.ml.fairProb, 0) : '—'} ${valueTag}</div>
+          ${locked ? '' : `<button class="btn btn-sm" style="margin-top:5px" data-flip="ml" data-event="${ev.id}">⇄ flip</button>`}
+        </div>`;
+    }
+
+    const isFav = App.isFavGame(ev);
+    return `
+      <div class="game-row ${isFav ? 'fav-row' : ''}">
+        <div>
+          <div class="game-when">${when}</div>
+          <div class="game-teams">${App.short(ev.away_team)} @ ${App.short(ev.home_team)}
+            ${isFav ? ' <span class="pill bigblue">BIG BLUE</span>' : ''}</div>
+          <div class="game-mkt">
+            line: ${a.marketSpread !== null ? App.short(ev.home_team) + ' ' + fmtSpread(a.marketSpread) : '—'}
+            ${total ? ' · O/U ' + total.point : ''}<br>
+            model: ${App.short(ev.home_team)} ${fmtSpread(Number(a.model.homeSpread.toFixed(1)))}
+            · ${MMath.pct(a.model.homeWinProb, 0)} home
+          </div>
+        </div>
+        <div>${atsBox}</div>
+        <div>${mlBox}</div>
+      </div>`;
+  },
+};
+
+;
+/* ==== js/parlay.js ==== */
+/* Lightning Lab — long-shot builder: parlays (with player props and
+   round robins) and teasers. True odds are de-vigged and independence-
+   assumed; correlation notes flag where that's not quite true. */
+
+const Parlay = {
+  mode: 'parlay',          // 'parlay' | 'teaser'
+  legs: [],                // parlay legs
+  teaserLegs: [],          // teaser legs (spreads/totals only, original points)
+  teasePts: 6,
+  selectedEvent: null,
+  propMarket: 'player_pass_yds',
+  stake: 1,
+  paper: false,            // log tickets as fake (paper) instead of real
+  offeredOverride: '',     // book's actual quoted odds (SGP / teaser card)
+  rrSizes: { 2: true, 3: false },
+  rrStake: 1,
+
+  /* Standard-ish teaser payout tables by teased points -> leg count.
+     Books differ; paste the book's quote to override. */
+  TEASER_ODDS: {
+    6:   { 2: -134, 3: 140, 4: 240, 5: 400, 6: 600, 7: 900, 8: 1200 },
+    6.5: { 2: -142, 3: 130, 4: 210, 5: 360, 6: 550, 7: 800, 8: 1150 },
+    7:   { 2: -150, 3: 120, 4: 180, 5: 300, 6: 450, 7: 700, 8: 1000 },
+  },
+
+  events() {
+    const cache = Store.data.oddsCache;
+    if (!cache) return [];
+    const now = Date.now();
+    return cache.events
+      .filter(ev => Date.parse(ev.commence_time) > now)
+      .sort((a, b) => Date.parse(a.commence_time) - Date.parse(b.commence_time));
+  },
+
+  activeLegs() { return this.mode === 'teaser' ? this.teaserLegs : this.legs; },
+
+  /* ---------- adding legs ---------- */
+
+  addLeg(ev, market, name) {
+    const o = Api.outcomeAny(ev, market, name);
+    if (!o) { App.banner('That side isn\'t posted at your books right now.', 'warn'); return; }
+    const fair = Api.fairProb(ev, o.book, market, name);
+    const label = market === 'totals'
+      ? `${name} ${o.point} — ${App.short(ev.away_team)} @ ${App.short(ev.home_team)}`
+      : market === 'spreads'
+        ? `${App.short(name)} ${(o.point > 0 ? '+' : '') + o.point}`
+        : `${App.short(name)} ML`;
+    this.legs.push({
+      id: Store.newId(),
+      eventId: ev.id, kickoff: ev.commence_time, home: ev.home_team, away: ev.away_team,
+      market, name,
+      point: o.point !== undefined ? o.point : null,
+      price: o.price, fairProb: fair, label, custom: false,
+    });
+    this.render();
+  },
+
+  addPropLeg(ev, market, name, desc, point, price, fairProb, label) {
+    this.legs.push({
+      id: Store.newId(),
+      eventId: ev.id, kickoff: ev.commence_time, home: ev.home_team, away: ev.away_team,
+      market, name, desc, point, price, fairProb, label, custom: false, prop: true,
+    });
+    this.render();
+  },
+
+  addCustomLeg(label, price) {
+    this.legs.push({
+      id: Store.newId(),
+      eventId: null, market: 'custom', name: label,
+      point: null, price, fairProb: null, label, custom: true,
+    });
+    this.render();
+  },
+
+  addTeaserLeg(ev, market, name) {
+    if (this.teaserLegs.length >= 8) { App.banner('Teasers max out at 8 legs.', 'warn'); return; }
+    let o, origPoint;
+    if (market === 'spreads') {
+      o = Api.bestSpread(ev, name);
+    } else {
+      o = Api.outcomeAny(ev, 'totals', name);
+    }
+    if (!o) { App.banner('That side isn\'t posted right now.', 'warn'); return; }
+    origPoint = o.point;
+    if (this.teaserLegs.some(l => l.eventId === ev.id && l.market === market)) {
+      App.banner('One spread or total per game in a teaser.', 'warn'); return;
+    }
+    this.teaserLegs.push({
+      id: Store.newId(),
+      eventId: ev.id, kickoff: ev.commence_time, home: ev.home_team, away: ev.away_team,
+      market, name, origPoint, book: o.book, price: o.price,
+    });
+    this.render();
+  },
+
+  removeLeg(id) {
+    this.legs = this.legs.filter(l => l.id !== id);
+    this.teaserLegs = this.teaserLegs.filter(l => l.id !== id);
+    this.render();
+  },
+
+  teasedPoint(leg) {
+    return leg.market === 'spreads'
+      ? MMath.teaseSpread(leg.origPoint, this.teasePts)
+      : MMath.teaseTotal(leg.origPoint, this.teasePts, leg.name === 'Over');
+  },
+
+  teaserLabel(leg, teased) {
+    const pt = (teased > 0 && leg.market === 'spreads' ? '+' : '') + teased;
+    return leg.market === 'spreads'
+      ? `${App.short(leg.name)} ${pt}`
+      : `${leg.name} ${pt} — ${App.short(leg.away)} @ ${App.short(leg.home)}`;
+  },
+
+  /* ---------- correlation / conflicts (parlay mode) ---------- */
+
+  analyzeCorrelation() {
+    const notes = [];
+    let blocked = false;
+    const legs = this.legs;
+    for (let i = 0; i < legs.length; i++) {
+      for (let j = i + 1; j < legs.length; j++) {
+        const a = legs[i], b = legs[j];
+        if (!a.eventId || a.eventId !== b.eventId) continue;
+        const game = `${App.short(a.away)} @ ${App.short(a.home)}`;
+        if (a.market === b.market && !a.prop && a.name !== b.name) {
+          notes.push({ level: 'bad', text: `⛔ ${game}: "${a.label}" and "${b.label}" are opposite sides of the same market — they can't both hit.` });
+          blocked = true;
+        } else if (a.prop && b.prop && a.market === b.market && a.desc === b.desc && a.point === b.point && a.name !== b.name) {
+          notes.push({ level: 'bad', text: `⛔ ${game}: both sides of ${a.desc}'s ${a.point} — they can't both hit.` });
+          blocked = true;
+        } else if ((a.market === 'h2h' && b.market === 'spreads') || (a.market === 'spreads' && b.market === 'h2h')) {
+          const mlLeg = a.market === 'h2h' ? a : b;
+          const spLeg = a.market === 'h2h' ? b : a;
+          if (mlLeg.name === spLeg.name) {
+            notes.push({ level: 'good', text: `✓ ${game}: ${App.short(mlLeg.name)} ML + spread are strongly correlated — your real hit chance is higher than the independence math shows. (Same-game parlays get repriced for this; paste the book's quoted odds below.)` });
+          } else {
+            notes.push({ level: 'warn', text: `⚠ ${game}: ${App.short(mlLeg.name)} ML vs ${App.short(spLeg.name)} spread pull against each other — only a narrow final margin cashes both.` });
+          }
+        } else if (a.prop || b.prop) {
+          notes.push({ level: '', text: `↔ ${game}: prop + same-game leg — correlated (a QB stacking yards usually means points on the board). Math assumes independence.` });
+        } else {
+          notes.push({ level: '', text: `↔ ${game}: same-game legs — the math below assumes independence, which isn't quite true here.` });
+        }
+      }
+    }
+    return { notes, blocked };
+  },
+
+  comboAtBook(bookKey) {
+    let dec = 1;
+    for (const leg of this.legs) {
+      if (leg.custom || leg.prop) return null;
+      const ev = (Store.data.oddsCache.events || []).find(e => e.id === leg.eventId);
+      if (!ev) return null;
+      const m = Api.market(ev, bookKey, leg.market);
+      const o = m && (m.outcomes || []).find(x => x.name === leg.name &&
+        (leg.point === null || x.point === leg.point));
+      if (!o) return null;
+      dec *= MMath.americanToDecimal(o.price);
+    }
+    return dec;
+  },
+
+  /* ---------- logging tickets ---------- */
+
+  baseBet() {
+    return {
+      createdAt: Date.now(),
+      week: App.weekOf(Date.now()),
+      eventId: null,
+      book: Store.data.settings.primaryBook,
+      source: 'user',
+      status: 'pending',
+      mode: this.paper ? 'paper' : 'real',
+    };
+  },
+
+  legSnapshot(l) {
+    return {
+      eventId: l.eventId, kickoff: l.kickoff, home: l.home, away: l.away,
+      market: l.market, name: l.name, desc: l.desc || null, point: l.point,
+      price: l.price, label: l.label, custom: !!l.custom, prop: !!l.prop,
+      status: 'pending',
+    };
+  },
+
+  logTicket(result) {
+    const kicks = this.legs.filter(l => l.kickoff).map(l => l.kickoff).sort();
+    Store.data.bets.push(Object.assign(this.baseBet(), {
+      id: Store.newId(),
+      type: 'parlay', category: 'parlay',
+      kickoff: kicks[0] || null,
+      pick: this.legs.length + '-leg parlay',
+      point: null,
+      price: this.offeredAmerican(result.american),
+      stake: this.stake,
+      legs: this.legs.map(l => this.legSnapshot(l)),
+      trueProb: result.trueProb,
+    }));
+    Store.save();
+    App.banner(`${this.paper ? '📋 Paper ' : ''}Ticket logged: ${this.legs.length} legs, ${MMath.money(this.stake)}. Good luck. ⚡`, 'good');
+    this.legs = [];
+    this.offeredOverride = '';
+    this.render();
+    App.renderSpend();
+  },
+
+  logRoundRobin() {
+    const sizes = Object.keys(this.rrSizes).filter(k => this.rrSizes[k]).map(Number);
+    const combos = sizes.flatMap(k => MMath.combinations(this.legs, k));
+    if (!combos.length) return;
+    const groupId = Store.newId();
+    let i = 0;
+    for (const combo of combos) {
+      i++;
+      const r = MMath.parlay(combo);
+      const kicks = combo.filter(l => l.kickoff).map(l => l.kickoff).sort();
+      Store.data.bets.push(Object.assign(this.baseBet(), {
+        id: Store.newId(),
+        type: 'parlay', category: 'parlay', groupId,
+        kickoff: kicks[0] || null,
+        pick: `RR ${combo.length}-leg (${i}/${combos.length})`,
+        point: null,
+        price: r.american,
+        stake: this.rrStake,
+        legs: combo.map(l => this.legSnapshot(l)),
+        trueProb: r.trueProb,
+      }));
+    }
+    Store.save();
+    App.banner(`${this.paper ? '📋 Paper ' : ''}Round robin logged: ${combos.length} tickets, ${MMath.money(combos.length * this.rrStake)} total.`, 'good');
+    this.legs = [];
+    this.render();
+    App.renderSpend();
+  },
+
+  logTeaser() {
+    const n = this.teaserLegs.length;
+    const table = this.TEASER_ODDS[this.teasePts];
+    const defOdds = table[n];
+    const price = this.offeredAmerican(defOdds);
+    const kicks = this.teaserLegs.map(l => l.kickoff).sort();
+    Store.data.bets.push(Object.assign(this.baseBet(), {
+      id: Store.newId(),
+      type: 'teaser', category: 'parlay',
+      kickoff: kicks[0] || null,
+      pick: `${n}-team ${this.teasePts}pt teaser`,
+      point: null,
+      price,
+      stake: this.stake,
+      teasePts: this.teasePts,
+      teaserTable: table,
+      legs: this.teaserLegs.map(l => {
+        const teased = this.teasedPoint(l);
+        return {
+          eventId: l.eventId, kickoff: l.kickoff, home: l.home, away: l.away,
+          market: l.market, name: l.name, point: teased, origPoint: l.origPoint,
+          price: -110, label: this.teaserLabel(l, teased) + ` (was ${(l.origPoint > 0 && l.market === 'spreads' ? '+' : '') + l.origPoint})`,
+          custom: false, status: 'pending',
+        };
+      }),
+    }));
+    Store.save();
+    App.banner(`${this.paper ? '📋 Paper ' : ''}Teaser logged: ${n} teams, ${this.teasePts} points, ${MMath.money(this.stake)}.`, 'good');
+    this.teaserLegs = [];
+    this.offeredOverride = '';
+    this.render();
+    App.renderSpend();
+  },
+
+  offeredAmerican(fallback) {
+    const o = parseInt(this.offeredOverride, 10);
+    return (this.offeredOverride !== '' && !isNaN(o) && o !== 0) ? o : fallback;
+  },
+
+  /* ---------- rendering ---------- */
+
+  render() {
+    const el = document.getElementById('tab-lab');
+    const events = this.events();
+
+    if (!Store.data.oddsCache) {
+      el.innerHTML = `<div class="card"><div class="empty">
+        No odds loaded yet. Add your API key in <b>Settings</b>, then hit <b>↻ Refresh odds</b>.
+      </div></div>`;
+      return;
+    }
+
+    if (this.selectedEvent && !events.find(e => e.id === this.selectedEvent)) this.selectedEvent = null;
+    if (!this.selectedEvent && events.length) this.selectedEvent = events[0].id;
+    const sel = events.find(e => e.id === this.selectedEvent);
+
+    const options = events.map(ev => {
+      const when = new Date(ev.commence_time).toLocaleString(undefined, { weekday: 'short', hour: 'numeric' });
+      const fav = App.isFavGame(ev) ? '🏈 ' : '';
+      return `<option value="${ev.id}" ${ev.id === this.selectedEvent ? 'selected' : ''}>
+        ${fav}${App.short(ev.away_team)} @ ${App.short(ev.home_team)} (${when})</option>`;
+    }).join('');
+
+    const modeBtns = `
+      <div style="display:flex; gap:6px; margin-bottom:12px; align-items:center; flex-wrap:wrap;">
+        <button class="btn btn-sm ${this.mode === 'parlay' ? 'btn-primary' : ''}" data-mode="parlay">Parlay</button>
+        <button class="btn btn-sm ${this.mode === 'teaser' ? 'btn-primary' : ''}" data-mode="teaser">Teaser</button>
+        <label style="margin-left:auto" title="Log tickets with fake money to test accuracy, separate from real bets">
+          <input type="checkbox" id="lab-paper" ${this.paper ? 'checked' : ''}> 📋 paper mode</label>
+      </div>`;
+
+    const body = this.mode === 'teaser'
+      ? this.renderTeaser(sel, options)
+      : this.renderParlay(sel, options);
+
+    el.innerHTML = `
+      <div class="card">
+        <h2>Lightning Lab ⚡</h2>
+        <p class="sub">Build the long shot, see its true odds, and check who pays more.
+          House math: every leg compounds the vig — keep stakes tiny.</p>
+        ${modeBtns}
+        ${body}
+      </div>`;
+
+    this.wire(sel);
+  },
+
+  renderParlay(sel, options) {
+    let legButtons = '';
+    if (sel) {
+      const btn = (market, name) => {
+        const o = Api.outcomeAny(sel, market, name);
+        if (!o) return '';
+        const lbl = market === 'totals' ? `${name} ${o.point}`
+          : market === 'spreads' ? `${App.short(name)} ${(o.point > 0 ? '+' : '') + o.point}`
+          : `${App.short(name)} ML`;
+        return `<button class="btn btn-sm" data-add="${market}|${name}">${lbl} <span class="muted">${MMath.formatAmerican(o.price)}</span></button>`;
+      };
+      legButtons = [
+        btn('h2h', sel.away_team), btn('h2h', sel.home_team),
+        btn('spreads', sel.away_team), btn('spreads', sel.home_team),
+        btn('totals', 'Over'), btn('totals', 'Under'),
+      ].join('');
+    }
+
+    const legsHtml = this.legs.map(l => `
+      <div class="leg-item">
+        <span>${l.label} <span class="muted">${MMath.formatAmerican(l.price)}${l.fairProb !== null && l.fairProb !== undefined ? ' · fair ' + MMath.pct(l.fairProb, 0) : ''}</span></span>
+        <button class="btn btn-sm btn-danger" data-remove="${l.id}">✕</button>
+      </div>`).join('') || '<div class="muted small">No legs yet — pick a game above and start stacking.</div>';
+
+    const corr = this.analyzeCorrelation();
+    const corrHtml = corr.notes.map(n => `<div class="corr-note ${n.level}">${n.text}</div>`).join('');
+
+    let resultsHtml = '';
+    if (this.legs.length >= 2) {
+      const result = MMath.parlay(this.legs);
+      const offered = this.offeredAmerican(result.american);
+      const offeredDec = MMath.americanToDecimal(offered);
+      const win = this.stake * (offeredDec - 1);
+      const oneIn = result.trueProb > 0 ? Math.round(1 / result.trueProb) : Infinity;
+      const share = result.fairDecimal ? offeredDec / result.fairDecimal : 0;
+      const ev$ = result.trueProb * offeredDec - 1;
+
+      const bookCompare = Store.data.settings.books.map(bk => {
+        const dec = this.comboAtBook(bk);
+        return `<div class="tile"><div class="t-label">${App.bookName(bk)} pays</div>
+          <div class="t-value">${dec ? MMath.formatAmerican(MMath.decimalToAmerican(dec)) : '—'}</div>
+          <div class="t-sub">${dec ? MMath.money(this.stake * (dec - 1)) + ' on ' + MMath.money(this.stake) : 'n/a (props/custom legs)'}</div></div>`;
+      }).join('');
+
+      resultsHtml = `
+        <h3>The verdict</h3>
+        <div class="parlay-stats">
+          <div class="tile"><div class="t-label">Combined odds</div>
+            <div class="t-value">${MMath.formatAmerican(offered)}</div>
+            <div class="t-sub">${MMath.money(this.stake)} pays ${MMath.money(win + this.stake)}</div></div>
+          <div class="tile"><div class="t-label">True odds*</div>
+            <div class="t-value">1 in ${oneIn === Infinity ? '∞' : oneIn.toLocaleString()}</div>
+            <div class="t-sub">${MMath.pct(result.trueProb, 2)} — fair payout ${MMath.formatAmerican(result.fairAmerican)}</div></div>
+          <div class="tile"><div class="t-label">Payout fairness</div>
+            <div class="t-value">${MMath.pct(share, 0)}</div>
+            <div class="t-sub">of a fair payout (higher = less ripoff)</div></div>
+          <div class="tile"><div class="t-label">Expected value</div>
+            <div class="t-value ${ev$ >= 0 ? 'pos' : 'neg'}">${MMath.money(ev$ * this.stake)}</div>
+            <div class="t-sub">per ticket, long-run</div></div>
+          ${bookCompare}
+        </div>
+        <p class="sub" style="margin-top:8px">*assumes legs are independent — see notes above if legs share a game.</p>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+          <label>Stake $ <input type="number" id="parlay-stake" value="${this.stake}" min="0.5" step="0.5" style="width:80px"></label>
+          <label>Book's quoted odds <input type="text" id="parlay-offered" placeholder="e.g. +1200" value="${this.offeredOverride}" style="width:110px"></label>
+          <button class="btn btn-primary" id="btn-log-ticket" ${corr.blocked ? 'disabled' : ''}>⚡ Log this ticket</button>
+          ${corr.blocked ? '<span class="small neg">fix the conflicting legs first</span>' : ''}
+        </div>
+        ${this.renderRoundRobin(corr.blocked)}`;
+    } else if (this.legs.length === 1) {
+      resultsHtml = '<p class="sub" style="margin-top:10px">Add at least one more leg for the parlay math.</p>';
+    }
+
+    return `
+      <label>Game <select id="lab-game" style="margin-left:6px; max-width:100%;">${options}</select></label>
+      <div class="leg-buttons">${legButtons}</div>
+      ${this.renderProps(sel)}
+      <h3>Your legs (${this.legs.length})</h3>
+      <div class="legs-list">${legsHtml}</div>
+      ${corrHtml}
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:10px;">
+        <input type="text" id="custom-leg-label" placeholder="Custom leg (e.g. first TD scorer)" style="flex:1; min-width:220px;">
+        <input type="text" id="custom-leg-odds" placeholder="+450" style="width:90px;">
+        <button class="btn btn-sm" id="btn-custom-leg">+ add</button>
+      </div>
+      <p class="sub" style="margin-top:4px">Custom legs count at their implied odds (no de-vig).</p>
+      ${resultsHtml}`;
+  },
+
+  renderProps(sel) {
+    if (!sel) return '';
+    const cached = Store.data.propsCache[sel.id];
+    if (!cached) {
+      return `<div style="margin-top:10px">
+        <button class="btn btn-sm" id="btn-load-props">🎯 Load player props for this game (${Api.PROP_MARKETS.length} API credits)</button>
+      </div>`;
+    }
+
+    const marketOpts = Api.PROP_MARKETS.map(m =>
+      `<option value="${m.key}" ${m.key === this.propMarket ? 'selected' : ''}>${m.label}</option>`).join('');
+
+    // collect outcomes for the chosen market at the primary book (fallback other)
+    const books = [Store.data.settings.primaryBook,
+      ...Store.data.settings.books.filter(b => b !== Store.data.settings.primaryBook)];
+    let market = null, bookUsed = null;
+    for (const bk of books) {
+      const b = (cached.event.bookmakers || []).find(x => x.key === bk);
+      const m = b && (b.markets || []).find(x => x.key === this.propMarket);
+      if (m && m.outcomes && m.outcomes.length) { market = m; bookUsed = bk; break; }
+    }
+
+    let rows = '<div class="muted small" style="margin-top:6px">No lines posted for this market yet.</div>';
+    if (market) {
+      // group by player (description) + point
+      const groups = {};
+      for (const o of market.outcomes) {
+        const key = (o.description || o.name) + '|' + (o.point !== undefined ? o.point : '');
+        (groups[key] = groups[key] || []).push(o);
+      }
+      const mLabel = Api.PROP_MARKETS.find(m => m.key === this.propMarket).label;
+      rows = '<div class="leg-buttons">' + Object.keys(groups).slice(0, 40).map(key => {
+        const g = groups[key];
+        const player = g[0].description || g[0].name;
+        const point = g[0].point;
+        return g.map(o => {
+          const side = o.description ? o.name : 'Yes';
+          const other = g.find(x => x !== o);
+          const fair = other ? MMath.devig(o.price, other.price) : null;
+          const lbl = point !== undefined
+            ? `${App.short(player)} ${side.charAt(0)}${point} ${mLabel}`
+            : `${App.short(player)} ${mLabel}`;
+          const full = point !== undefined
+            ? `${player} ${side} ${point} ${mLabel.toLowerCase()}`
+            : `${player} ${mLabel.toLowerCase()}`;
+          return `<button class="btn btn-sm" data-prop='${JSON.stringify({
+            market: this.propMarket, name: o.name, desc: player,
+            point: point !== undefined ? point : null, price: o.price, fair, label: full,
+          }).replace(/'/g, '&#39;')}'>${lbl} <span class="muted">${MMath.formatAmerican(o.price)}</span></button>`;
+        }).join('');
+      }).join('') + '</div>';
+    }
+
+    const age = Math.round((Date.now() - cached.fetchedAt) / 60000);
+    return `
+      <h3>Player props <span class="muted small">(${bookUsed ? App.bookName(bookUsed) : ''} · ${age}m old)</span></h3>
+      <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+        <select id="prop-market">${marketOpts}</select>
+        <button class="btn btn-sm" id="btn-load-props">↻ refresh (${Api.PROP_MARKETS.length} credits)</button>
+      </div>
+      ${rows}
+      <p class="sub" style="margin-top:4px">Prop legs settle manually in the Ledger (✓/✗) — box scores aren't in the free API.</p>`;
+  },
+
+  renderRoundRobin(blocked) {
+    if (this.legs.length < 3) return '';
+    const sizes = [2, 3].filter(k => k < this.legs.length);
+    const combos = sizes.filter(k => this.rrSizes[k]).flatMap(k => MMath.combinations(this.legs, k));
+    const totalCost = combos.length * this.rrStake;
+
+    let summary = '';
+    if (combos.length) {
+      const allHit = combos.reduce((s, c) => s + this.rrStake * MMath.parlay(c).decimal, 0);
+      // worst case if exactly one leg loses
+      let worstOneMiss = Infinity;
+      for (const missLeg of this.legs) {
+        const ret = combos.filter(c => !c.includes(missLeg))
+          .reduce((s, c) => s + this.rrStake * MMath.parlay(c).decimal, 0);
+        worstOneMiss = Math.min(worstOneMiss, ret);
+      }
+      const ev = combos.reduce((s, c) => { const r = MMath.parlay(c); return s + this.rrStake * (r.trueProb * r.decimal - 1); }, 0);
+      summary = `<div class="parlay-stats">
+        <div class="tile"><div class="t-label">Tickets</div><div class="t-value">${combos.length}</div>
+          <div class="t-sub">${MMath.money(this.rrStake)} each · ${MMath.money(totalCost)} total</div></div>
+        <div class="tile"><div class="t-label">All legs hit</div><div class="t-value">${MMath.money(allHit)}</div>
+          <div class="t-sub">collected (${MMath.money(allHit - totalCost)} profit)</div></div>
+        <div class="tile"><div class="t-label">One leg misses</div><div class="t-value">${MMath.money(worstOneMiss)}</div>
+          <div class="t-sub">still collected (worst case) — the RR safety net</div></div>
+        <div class="tile"><div class="t-label">Expected value</div>
+          <div class="t-value ${ev >= 0 ? 'pos' : 'neg'}">${MMath.money(ev)}</div>
+          <div class="t-sub">whole round robin, long-run</div></div>
+      </div>`;
+    }
+
+    return `
+      <h3>Round robin <span class="muted small">(every combo as its own ticket — misses one leg, still cashes some)</span></h3>
+      <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
+        <label><input type="checkbox" id="rr-2" ${this.rrSizes[2] ? 'checked' : ''}> 2-leg combos (${MMath.combinations(this.legs, 2).length})</label>
+        <label><input type="checkbox" id="rr-3" ${this.rrSizes[3] ? 'checked' : ''} ${this.legs.length < 4 ? 'disabled' : ''}> 3-leg combos (${MMath.combinations(this.legs, 3).length})</label>
+        <label>$ per ticket <input type="number" id="rr-stake" value="${this.rrStake}" min="0.5" step="0.5" style="width:70px"></label>
+        <button class="btn" id="btn-log-rr" ${blocked || !combos.length ? 'disabled' : ''}>Log round robin (${combos.length} tickets, ${MMath.money(totalCost)})</button>
+      </div>
+      ${summary}`;
+  },
+
+  renderTeaser(sel, options) {
+    let legButtons = '';
+    if (sel) {
+      const sp = name => {
+        const o = Api.bestSpread(sel, name);
+        if (!o) return '';
+        const teased = MMath.teaseSpread(o.point, this.teasePts);
+        const wong = MMath.isWongLeg(o.point, this.teasePts) ? ' ⭐' : '';
+        return `<button class="btn btn-sm" data-tease="spreads|${name}">${App.short(name)}
+          ${(o.point > 0 ? '+' : '') + o.point} → <b>${(teased > 0 ? '+' : '') + teased}</b>${wong}</button>`;
+      };
+      const tot = name => {
+        const o = Api.outcomeAny(sel, 'totals', name);
+        if (!o) return '';
+        const teased = MMath.teaseTotal(o.point, this.teasePts, name === 'Over');
+        return `<button class="btn btn-sm" data-tease="totals|${name}">${name} ${o.point} → <b>${teased}</b></button>`;
+      };
+      legButtons = [sp(sel.away_team), sp(sel.home_team), tot('Over'), tot('Under')].join('');
+    }
+
+    const legsHtml = this.teaserLegs.map(l => {
+      const teased = this.teasedPoint(l);
+      const wong = l.market === 'spreads' && MMath.isWongLeg(l.origPoint, this.teasePts)
+        ? ' <span class="pill good">⭐ Wong</span>' : '';
+      return `<div class="leg-item">
+        <span>${this.teaserLabel(l, teased)} <span class="muted">(was ${(l.origPoint > 0 && l.market === 'spreads' ? '+' : '') + l.origPoint})</span>${wong}</span>
+        <button class="btn btn-sm btn-danger" data-remove="${l.id}">✕</button>
+      </div>`;
+    }).join('') || '<div class="muted small">Add spreads or totals — every leg gets the tease.</div>';
+
+    let resultsHtml = '';
+    const n = this.teaserLegs.length;
+    if (n >= 2) {
+      const table = this.TEASER_ODDS[this.teasePts];
+      const defOdds = table[n];
+      const offered = this.offeredAmerican(defOdds);
+      const offeredDec = MMath.americanToDecimal(offered);
+      const legProb = MMath.teasedCoverProb(this.teasePts);
+      const trueProb = Math.pow(legProb, n);
+      const ev$ = trueProb * offeredDec - 1;
+      const wongCount = this.teaserLegs.filter(l => l.market === 'spreads' && MMath.isWongLeg(l.origPoint, this.teasePts)).length;
+
+      resultsHtml = `
+        <h3>The verdict</h3>
+        <div class="parlay-stats">
+          <div class="tile"><div class="t-label">${n}-team ${this.teasePts}pt pays</div>
+            <div class="t-value">${MMath.formatAmerican(offered)}</div>
+            <div class="t-sub">${MMath.money(this.stake)} pays ${MMath.money(this.stake * offeredDec)}</div></div>
+          <div class="tile"><div class="t-label">Per-leg hit rate*</div>
+            <div class="t-value">${MMath.pct(legProb, 0)}</div>
+            <div class="t-sub">need ${MMath.pct(Math.pow(MMath.americanToImplied(offered), 1 / n), 0)}/leg to break even</div></div>
+          <div class="tile"><div class="t-label">All ${n} hit</div>
+            <div class="t-value">${MMath.pct(trueProb, 0)}</div>
+            <div class="t-sub">independence assumed</div></div>
+          <div class="tile"><div class="t-label">Expected value</div>
+            <div class="t-value ${ev$ >= 0 ? 'pos' : 'neg'}">${MMath.money(ev$ * this.stake)}</div>
+            <div class="t-sub">per ticket, long-run</div></div>
+        </div>
+        <p class="sub" style="margin-top:8px">*flat normal-margin model — ⭐ Wong legs (teasing through both 3 and 7) hit
+          meaningfully more often than this credits them for${wongCount ? `; you have ${wongCount}` : ''}.
+          Ties push and drop the teaser to the next payout tier.</p>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:8px;">
+          <label>Stake $ <input type="number" id="parlay-stake" value="${this.stake}" min="0.5" step="0.5" style="width:80px"></label>
+          <label>Book's quoted odds <input type="text" id="parlay-offered" placeholder="${MMath.formatAmerican(defOdds)}" value="${this.offeredOverride}" style="width:110px"></label>
+          <button class="btn btn-primary" id="btn-log-teaser">🧀 Log this teaser</button>
+        </div>`;
+    } else if (n === 1) {
+      resultsHtml = '<p class="sub" style="margin-top:10px">Teasers need at least 2 legs.</p>';
+    }
+
+    return `
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px;">
+        <label>Tease
+          <select id="tease-pts" style="margin-left:4px">
+            ${[6, 6.5, 7].map(p => `<option value="${p}" ${p === this.teasePts ? 'selected' : ''}>${p} points</option>`).join('')}
+          </select>
+        </label>
+        <span class="muted small">⭐ = Wong leg: the tease crosses both key numbers 3 and 7 — the good ones.</span>
+      </div>
+      <label>Game <select id="lab-game" style="margin-left:6px; max-width:100%;">${options}</select></label>
+      <div class="leg-buttons">${legButtons}</div>
+      <h3>Teaser legs (${n})</h3>
+      <div class="legs-list">${legsHtml}</div>
+      ${resultsHtml}`;
+  },
+
+  /* ---------- event wiring ---------- */
+
+  wire(sel) {
+    const el = document.getElementById('tab-lab');
+    el.querySelectorAll('[data-mode]').forEach(b => {
+      b.onclick = () => { this.mode = b.dataset.mode; this.render(); };
+    });
+    const paperEl = document.getElementById('lab-paper');
+    if (paperEl) paperEl.onchange = () => { this.paper = paperEl.checked; };
+    const gameSel = document.getElementById('lab-game');
+    if (gameSel) gameSel.onchange = () => { this.selectedEvent = gameSel.value; this.render(); };
+
+    el.querySelectorAll('[data-add]').forEach(b => {
+      b.onclick = () => { const [m, name] = b.dataset.add.split('|'); this.addLeg(sel, m, name); };
+    });
+    el.querySelectorAll('[data-tease]').forEach(b => {
+      b.onclick = () => { const [m, name] = b.dataset.tease.split('|'); this.addTeaserLeg(sel, m, name); };
+    });
+    el.querySelectorAll('[data-prop]').forEach(b => {
+      b.onclick = () => {
+        const p = JSON.parse(b.dataset.prop);
+        this.addPropLeg(sel, p.market, p.name, p.desc, p.point, p.price, p.fair, p.label);
+      };
+    });
+    el.querySelectorAll('[data-remove]').forEach(b => {
+      b.onclick = () => this.removeLeg(b.dataset.remove);
+    });
+
+    const teaseSel = document.getElementById('tease-pts');
+    if (teaseSel) teaseSel.onchange = () => { this.teasePts = parseFloat(teaseSel.value); this.render(); };
+
+    const loadProps = document.getElementById('btn-load-props');
+    if (loadProps) loadProps.onclick = async () => {
+      loadProps.disabled = true;
+      try {
+        await Api.fetchEventProps(sel.id);
+        App.banner(`Props loaded for ${App.short(sel.away_team)} @ ${App.short(sel.home_team)}. (${Api.PROP_MARKETS.length} credits)`, 'good');
+      } catch (e) { App.banner(e.message, 'error'); }
+      App.renderQuota();
+      this.render();
+    };
+    const propSel = document.getElementById('prop-market');
+    if (propSel) propSel.onchange = () => { this.propMarket = propSel.value; this.render(); };
+
+    const stakeEl = document.getElementById('parlay-stake');
+    if (stakeEl) stakeEl.onchange = () => { this.stake = Math.max(0.5, parseFloat(stakeEl.value) || 1); this.render(); };
+    const offeredEl = document.getElementById('parlay-offered');
+    if (offeredEl) offeredEl.onchange = () => { this.offeredOverride = offeredEl.value.trim().replace('+', ''); this.render(); };
+
+    const logBtn = document.getElementById('btn-log-ticket');
+    if (logBtn) logBtn.onclick = () => this.logTicket(MMath.parlay(this.legs));
+    const teaserBtn = document.getElementById('btn-log-teaser');
+    if (teaserBtn) teaserBtn.onclick = () => this.logTeaser();
+
+    const rr2 = document.getElementById('rr-2'), rr3 = document.getElementById('rr-3');
+    if (rr2) rr2.onchange = () => { this.rrSizes[2] = rr2.checked; this.render(); };
+    if (rr3) rr3.onchange = () => { this.rrSizes[3] = rr3.checked; this.render(); };
+    const rrStake = document.getElementById('rr-stake');
+    if (rrStake) rrStake.onchange = () => { this.rrStake = Math.max(0.5, parseFloat(rrStake.value) || 1); this.render(); };
+    const rrBtn = document.getElementById('btn-log-rr');
+    if (rrBtn) rrBtn.onclick = () => this.logRoundRobin();
+
+    const customBtn = document.getElementById('btn-custom-leg');
+    if (customBtn) customBtn.onclick = () => {
+      const label = document.getElementById('custom-leg-label').value.trim();
+      const odds = parseInt(document.getElementById('custom-leg-odds').value.trim().replace('+', ''), 10);
+      if (!label || isNaN(odds) || odds === 0) { App.banner('Custom leg needs a name and american odds (e.g. +450).', 'warn'); return; }
+      this.addCustomLeg(label, odds);
+    };
+  },
+};
+
+;
+/* ==== js/lineshop.js ==== */
+/* Line Shop — FanDuel vs DraftKings side by side, best price highlighted.
+   Same bet, better number: the closest thing to free money in betting. */
+
+const LineShop = {
+
+  render() {
+    const el = document.getElementById('tab-shop');
+    const cache = Store.data.oddsCache;
+
+    if (!cache) {
+      el.innerHTML = `<div class="card"><div class="empty">
+        No odds loaded yet. Add your API key in <b>Settings</b>, then hit <b>↻ Refresh odds</b>.
+      </div></div>`;
+      return;
+    }
+
+    const now = Date.now();
+    const events = cache.events
+      .filter(ev => Date.parse(ev.commence_time) > now)
+      .sort((a, b) => Date.parse(a.commence_time) - Date.parse(b.commence_time));
+
+    if (!events.length) {
+      el.innerHTML = '<div class="card"><div class="empty">No upcoming games in the feed.</div></div>';
+      return;
+    }
+
+    const books = Store.data.settings.books;
+    const head = books.map(bk => `<th>${App.bookName(bk)}</th>`).join('');
+
+    const rows = events.map(ev => {
+      const when = new Date(ev.commence_time)
+        .toLocaleString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit' });
+
+      const cell = (market, name) => {
+        // gather each book's quote for this side
+        const quotes = books.map(bk => {
+          const m = Api.market(ev, bk, market);
+          const o = m && (m.outcomes || []).find(x => x.name === name);
+          return o || null;
+        });
+        // best = highest price; for spreads/totals note when points differ
+        let bestIdx = -1;
+        quotes.forEach((q, i) => {
+          if (q && (bestIdx === -1 || q.price > quotes[bestIdx].price)) bestIdx = i;
+        });
+        return quotes.map((q, i) => {
+          if (!q) return '<td class="muted">—</td>';
+          const pt = q.point !== undefined && q.point !== null
+            ? ((market === 'totals' ? '' : q.point > 0 ? '+' : '') + q.point + ' ') : '';
+          const cls = i === bestIdx && quotes.filter(Boolean).length > 1 ? 'best' : '';
+          return `<td class="num ${cls}">${pt}${MMath.formatAmerican(q.price)}</td>`;
+        }).join('');
+      };
+
+      const side = (label, market, name) => `
+        <tr>
+          <td><span class="muted small">${label}</span> ${App.short(name)}</td>
+          ${cell(market, name)}
+        </tr>`;
+
+      const isFav = App.isFavGame(ev);
+      return `
+        <tr><td colspan="${books.length + 1}" style="padding-top:14px">
+          <b>${App.short(ev.away_team)} @ ${App.short(ev.home_team)}</b>
+          ${isFav ? ' <span class="pill bigblue">BIG BLUE</span>' : ''}
+          <span class="muted small"> ${when}</span></td></tr>
+        ${side('ML', 'h2h', ev.away_team)}
+        ${side('ML', 'h2h', ev.home_team)}
+        ${side('SPR', 'spreads', ev.away_team)}
+        ${side('SPR', 'spreads', ev.home_team)}
+        ${side('TOT', 'totals', 'Over')}
+        ${side('TOT', 'totals', 'Under')}`;
+    }).join('');
+
+    el.innerHTML = `
+      <div class="card">
+        <h2>Line Shop</h2>
+        <p class="sub">Best available price per side in <span class="best">green</span>.
+          When the spread's points differ between books, more points on your side beats a slightly better price.</p>
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr><th>Bet</th>${head}</tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>`;
+  },
+};
+
+;
+/* ==== js/arb.js ==== */
+/* Arb Finder — scans FanDuel vs DraftKings for three things:
+   1. True arbitrage: opposite sides priced so both bets guarantee profit.
+   2. Middles: line gaps where a window of final margins wins BOTH bets,
+      while missing the window loses only the vig.
+   3. Low-hold markets: where betting is cheapest.
+   Honesty note: with two books, true arbs are rare and short-lived;
+   middles are the realistic find. */
+
+const Arb = {
+  total: 100, // stake to split across an arb
+
+  collect(ev, market, name) {
+    const out = [];
+    for (const bk of Store.data.settings.books) {
+      const m = Api.market(ev, bk, market);
+      if (!m) continue;
+      for (const o of m.outcomes || []) {
+        if (o.name === name) out.push({ book: bk, price: o.price, point: o.point });
+      }
+    }
+    return out;
+  },
+
+  scan() {
+    const arbs = [], middles = [], holds = [];
+    const cache = Store.data.oddsCache;
+    if (!cache) return { arbs, middles, holds };
+    const now = Date.now();
+
+    for (const ev of cache.events) {
+      if (Date.parse(ev.commence_time) < now) continue;
+      const label = `${App.short(ev.away_team)} @ ${App.short(ev.home_team)}`;
+      const kick = new Date(ev.commence_time).toLocaleString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit' });
+
+      // --- moneyline: best price each side across books ---
+      const mlA = this.collect(ev, 'h2h', ev.away_team).sort((a, b) => b.price - a.price)[0];
+      const mlH = this.collect(ev, 'h2h', ev.home_team).sort((a, b) => b.price - a.price)[0];
+      if (mlA && mlH) {
+        const r = MMath.arbTwoWay(mlA.price, mlH.price, this.total);
+        const entry = {
+          ev, label, kick, market: 'Moneyline',
+          sideA: `${App.short(ev.away_team)} ML ${MMath.formatAmerican(mlA.price)} @ ${App.bookName(mlA.book)}`,
+          sideB: `${App.short(ev.home_team)} ML ${MMath.formatAmerican(mlH.price)} @ ${App.bookName(mlH.book)}`,
+          r,
+        };
+        if (r.isArb) arbs.push(entry); else holds.push(entry);
+      }
+
+      // --- spreads: same-point arbs + middles ---
+      const spA = this.collect(ev, 'spreads', ev.away_team);
+      const spH = this.collect(ev, 'spreads', ev.home_team);
+      for (const a of spA) {
+        for (const h of spH) {
+          if (a.point === undefined || h.point === undefined) continue;
+          if (a.point + h.point === 0) {
+            const r = MMath.arbTwoWay(a.price, h.price, this.total);
+            const entry = {
+              ev, label, kick, market: 'Spread',
+              sideA: `${App.short(ev.away_team)} ${(a.point > 0 ? '+' : '') + a.point} ${MMath.formatAmerican(a.price)} @ ${App.bookName(a.book)}`,
+              sideB: `${App.short(ev.home_team)} ${(h.point > 0 ? '+' : '') + h.point} ${MMath.formatAmerican(h.price)} @ ${App.bookName(h.book)}`,
+              r,
+            };
+            if (r.isArb && a.book !== h.book) arbs.push(entry); else holds.push(entry);
+          } else if (a.point + h.point > 0 && a.book !== h.book) {
+            const m = this.middleEntry(ev, label, kick, 'Spread', a, h,
+              a.point > 0 ? a : h, a.point > 0 ? h : a);
+            if (m) middles.push(m);
+          }
+        }
+      }
+
+      // --- totals: same-point arbs + middles ---
+      const ovs = this.collect(ev, 'totals', 'Over');
+      const uns = this.collect(ev, 'totals', 'Under');
+      for (const o of ovs) {
+        for (const u of uns) {
+          if (o.point === undefined || u.point === undefined) continue;
+          if (o.point === u.point) {
+            const r = MMath.arbTwoWay(o.price, u.price, this.total);
+            const entry = {
+              ev, label, kick, market: 'Total',
+              sideA: `Over ${o.point} ${MMath.formatAmerican(o.price)} @ ${App.bookName(o.book)}`,
+              sideB: `Under ${u.point} ${MMath.formatAmerican(u.price)} @ ${App.bookName(u.book)}`,
+              r,
+            };
+            if (r.isArb && o.book !== u.book) arbs.push(entry); else holds.push(entry);
+          } else if (u.point > o.point && o.book !== u.book) {
+            const m = this.totalMiddleEntry(ev, label, kick, o, u);
+            if (m) middles.push(m);
+          }
+        }
+      }
+    }
+
+    arbs.sort((a, b) => b.r.profitPct - a.r.profitPct);
+    middles.sort((a, b) => b.score - a.score);
+    holds.sort((a, b) => a.r.hold - b.r.hold);
+    return { arbs, middles, holds: holds.slice(0, 10) };
+  },
+
+  /* dog = positive-point side, fav = negative-point side */
+  middleEntry(ev, label, kick, market, a, h, dog, fav) {
+    const lo = -fav.point, hi = dog.point; // both win when margin in (lo, hi) exclusive of halves
+    const winNums = [];
+    for (let m = Math.ceil(lo + 0.5); m <= Math.floor(hi - 0.5); m++) winNums.push(m);
+    if (!winNums.length) return null; // 0.5-pt gap: only a push-middle, not a real one
+    const key = winNums.filter(n => n === 3 || n === 7);
+    const favTeam = fav === a ? ev.away_team : ev.home_team;
+    const dogTeam = dog === a ? ev.away_team : ev.home_team;
+    const econ = this.middleEcon(dog.price, fav.price);
+    return {
+      label, kick, market,
+      sideA: `${App.short(dogTeam)} ${(dog.point > 0 ? '+' : '') + dog.point} ${MMath.formatAmerican(dog.price)} @ ${App.bookName(dog.book)}`,
+      sideB: `${App.short(favTeam)} ${(fav.point > 0 ? '+' : '') + fav.point} ${MMath.formatAmerican(fav.price)} @ ${App.bookName(fav.book)}`,
+      window: `${App.short(favTeam)} wins by ${winNums.join(', ')}`,
+      winNums, key,
+      score: winNums.length + key.length * 2,
+      econ,
+    };
+  },
+
+  totalMiddleEntry(ev, label, kick, o, u) {
+    const winNums = [];
+    for (let t = Math.ceil(o.point + 0.5); t <= Math.floor(u.point - 0.5); t++) winNums.push(t);
+    if (!winNums.length) return null;
+    const econ = this.middleEcon(o.price, u.price);
+    return {
+      label, kick, market: 'Total',
+      sideA: `Over ${o.point} ${MMath.formatAmerican(o.price)} @ ${App.bookName(o.book)}`,
+      sideB: `Under ${u.point} ${MMath.formatAmerican(u.price)} @ ${App.bookName(u.book)}`,
+      window: `total lands ${winNums.length > 4 ? winNums[0] + '–' + winNums[winNums.length - 1] : winNums.join(', ')}`,
+      winNums, key: [],
+      score: winNums.length,
+      econ,
+    };
+  },
+
+  /* Stake each side to win $100: worst case loses only the vig,
+     hitting the window wins both. */
+  middleEcon(priceA, priceB) {
+    const sA = 100 / (MMath.americanToDecimal(priceA) - 1);
+    const sB = 100 / (MMath.americanToDecimal(priceB) - 1);
+    return {
+      stakeA: sA, stakeB: sB,
+      total: sA + sB,
+      missProfit: 100 - Math.max(sA, sB), // one side always wins in a middle setup
+      hitProfit: 200,
+    };
+  },
+
+  render() {
+    const el = document.getElementById('tab-arb');
+    if (!Store.data.oddsCache) {
+      el.innerHTML = `<div class="card"><div class="empty">
+        No odds loaded yet. Add your API key in <b>Settings</b>, then hit <b>↻ Refresh odds</b>.
+      </div></div>`;
+      return;
+    }
+
+    const { arbs, middles, holds } = this.scan();
+    const fetched = new Date(Store.data.oddsCache.fetchedAt).toLocaleString();
+    const watcherCard = typeof Watcher !== 'undefined' ? Watcher.renderControl() : '';
+
+    const arbRows = arbs.map(a => `
+      <tr>
+        <td><b>${a.label}</b><br><span class="muted small">${a.market} · ${a.kick}</span></td>
+        <td>${a.sideA}<br>${a.sideB}</td>
+        <td class="num"><b class="pos">+${MMath.pct(a.r.profitPct, 2)}</b></td>
+        <td class="num">${MMath.money(a.r.stakeA)}<br>${MMath.money(a.r.stakeB)}</td>
+        <td class="num pos">${MMath.money(a.r.profit)}</td>
+      </tr>`).join('');
+
+    const arbSection = arbs.length ? `
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Game</th><th>Both sides</th><th class="num">Edge</th>
+          <th class="num">Stake split ($${this.total})</th><th class="num">Locked profit</th></tr></thead>
+        <tbody>${arbRows}</tbody>
+      </table></div>
+      <p class="sub">Move fast — arbs die when a book adjusts. Bet both sides before either line moves.</p>`
+      : `<div class="empty">No true arbs right now — normal with two books. They appear when FD and DK
+        disagree after news (injuries, weather). Refresh odds Sunday morning and after big announcements.</div>`;
+
+    const midRows = middles.map(m => `
+      <tr>
+        <td><b>${m.label}</b><br><span class="muted small">${m.market} · ${m.kick}</span></td>
+        <td>${m.sideA}<br>${m.sideB}</td>
+        <td>${m.window}
+          ${m.key.length ? `<br><span class="pill good">key number${m.key.length > 1 ? 's' : ''} ${m.key.join(' & ')} in window</span>` : ''}</td>
+        <td class="num">${MMath.money(m.econ.total)}<br><span class="muted small">${MMath.money(m.econ.stakeA)} / ${MMath.money(m.econ.stakeB)}</span></td>
+        <td class="num"><span class="pos">+${MMath.money(m.econ.hitProfit)}</span> hit<br>
+          <span class="${m.econ.missProfit >= 0 ? 'pos' : 'neg'}">${MMath.money(m.econ.missProfit)}</span> miss</td>
+      </tr>`).join('');
+
+    const midSection = middles.length ? `
+      <div class="table-wrap"><table class="data">
+        <thead><tr><th>Game</th><th>Both sides</th><th>Middle window</th>
+          <th class="num">Cost (to win $100/side)</th><th class="num">Outcome</th></tr></thead>
+        <tbody>${midRows}</tbody>
+      </table></div>
+      <p class="sub">A middle wins BOTH bets when the game lands in the window; otherwise one side cashes and
+        you're out roughly the vig. Windows containing 3 or 7 (the NFL key numbers) hit far more often.</p>`
+      : '<div class="empty">No middle windows between your books right now.</div>';
+
+    const holdRows = holds.map(h => `
+      <tr>
+        <td><b>${h.label}</b> <span class="muted small">${h.market}</span></td>
+        <td class="small">${h.sideA}<br>${h.sideB}</td>
+        <td class="num">${MMath.pct(h.r.hold - 1, 2)}</td>
+      </tr>`).join('');
+
+    el.innerHTML = `
+      ${watcherCard}
+      <div class="card">
+        <h2>Arb Finder 💰</h2>
+        <p class="sub">Scanning FanDuel vs DraftKings as of ${fetched}. Straight talk: 2-book NFL arbs are rare —
+          middles are the everyday find, and books may limit accounts that only ever arb.</p>
+        <label>Total to split across an arb $
+          <input type="number" id="arb-total" value="${this.total}" min="10" step="10" style="width:90px"></label>
+        <h3>Guaranteed arbs (${arbs.length})</h3>
+        ${arbSection}
+        <h3>Middles (${middles.length})</h3>
+        ${midSection}
+        <h3>Cheapest markets (lowest combined hold)</h3>
+        <div class="table-wrap"><table class="data">
+          <thead><tr><th>Game</th><th>Best two-way pricing</th><th class="num">Hold</th></tr></thead>
+          <tbody>${holdRows || '<tr><td colspan="3" class="muted">nothing to scan</td></tr>'}</tbody>
+        </table></div>
+        <p class="sub">Hold = what the books keep pricing both sides at their best numbers. Bet where it's lowest.</p>
+      </div>`;
+
+    const totalEl = document.getElementById('arb-total');
+    if (totalEl) totalEl.onchange = () => {
+      this.total = Math.max(10, parseFloat(totalEl.value) || 100);
+      this.render();
+    };
+    if (typeof Watcher !== 'undefined') Watcher.wire();
+  },
+};
+
+;
+/* ==== js/watcher.js ==== */
+/* Watcher — while the app is open, periodically re-fetch odds, rescan for
+   arbs and key-number middles, and fire a browser notification on anything
+   NEW. No server, so this only runs with the tab open; true closed-app push
+   would need a backend. Guarded against burning API credits. */
+
+const Watcher = {
+  timer: null,
+  running: false,
+  lastCheck: null,
+  lastResult: '',
+
+  prefs() { return Store.data.settings.watcher; },
+
+  /* stable signature so the same opportunity isn't alerted twice */
+  sig(kind, o) {
+    if (kind === 'arb') return `arb|${o.label}|${o.market}|${o.sideA}|${o.sideB}`;
+    return `mid|${o.label}|${o.market}|${o.sideA}|${o.sideB}|${o.winNums.join(',')}`;
+  },
+
+  supported() { return typeof Notification !== 'undefined'; },
+
+  async ensurePermission() {
+    if (!this.supported()) return false;
+    if (Notification.permission === 'granted') return true;
+    if (Notification.permission === 'denied') return false;
+    try { return (await Notification.requestPermission()) === 'granted'; }
+    catch (e) { return false; }
+  },
+
+  notify(title, body) {
+    try {
+      new Notification(title, {
+        body,
+        icon: 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏈</text></svg>',
+        tag: 'pfp-watcher-' + Date.now(),
+      });
+    } catch (e) { /* notifications may be blocked; in-app banner still fires */ }
+  },
+
+  async start() {
+    const ok = await this.ensurePermission();
+    if (!ok) {
+      App.banner(this.supported()
+        ? 'Notifications are blocked in your browser settings — enable them for this site to get alerts.'
+        : 'This browser has no notifications, or the app is opened from a file:// path. Serve it from localhost or GitHub Pages.', 'warn');
+      // still allow in-app-only watching
+    }
+    if (!Store.data.settings.apiKey) {
+      App.banner('Add your API key in Settings before starting the Watcher.', 'error');
+      return;
+    }
+    this.running = true;
+    this.check(); // immediate first pass
+    this.timer = setInterval(() => this.check(), this.prefs().intervalMin * 60000);
+    App.banner(`Watcher on — rescanning every ${this.prefs().intervalMin} min while this tab stays open. 🔔`, 'good');
+    if (App.activeTab === 'arb') Arb.render();
+  },
+
+  stop() {
+    this.running = false;
+    clearInterval(this.timer);
+    this.timer = null;
+    App.banner('Watcher off.', '');
+    if (App.activeTab === 'arb') Arb.render();
+  },
+
+  toggle() { this.running ? this.stop() : this.start(); },
+
+  async check() {
+    const p = this.prefs();
+    const q = Store.data.quota;
+    if (q && Number(q.remaining) < p.minCredits) {
+      App.banner(`Watcher paused: only ${q.remaining} API credits left (floor is ${p.minCredits}). Raise the floor in Settings or top up next month.`, 'warn');
+      this.stop();
+      return;
+    }
+
+    try {
+      await Api.fetchOdds();               // 3 credits
+    } catch (e) {
+      App.banner('Watcher: odds refresh failed — ' + e.message, 'error');
+      return;
+    }
+    this.lastCheck = Date.now();
+
+    const { arbs, middles } = Arb.scan();
+    const fresh = [];
+    const seen = Store.data.watcherSeen;
+
+    if (p.alertArbs) {
+      for (const a of arbs) {
+        const s = this.sig('arb', a);
+        if (!seen[s]) { seen[s] = Date.now(); fresh.push({ type: 'ARB', text: `${a.label}: ${MMath.pct(a.r.profitPct, 1)} locked (${a.sideA} / ${a.sideB})` }); }
+      }
+    }
+    if (p.alertMiddles) {
+      for (const m of middles) {
+        if (p.keyOnly && !m.key.length) continue; // only middles hitting 3 or 7
+        const s = this.sig('mid', m);
+        if (!seen[s]) { seen[s] = Date.now(); fresh.push({ type: 'MIDDLE', text: `${m.label}: ${m.window}${m.key.length ? ' (key ' + m.key.join('&') + ')' : ''}` }); }
+      }
+    }
+
+    // prune signatures older than 3 days
+    for (const k in seen) if (Date.now() - seen[k] > 3 * 864e5) delete seen[k];
+    Store.save();
+
+    if (fresh.length) {
+      const title = `🏈 ${fresh.length} new ${fresh.length === 1 ? 'opportunity' : 'opportunities'}`;
+      this.notify(title, fresh.map(f => `[${f.type}] ${f.text}`).join('\n'));
+      App.banner(`${title} — ${fresh.map(f => f.text).join(' · ')}`, 'good');
+      this.lastResult = `${new Date().toLocaleTimeString()}: found ${fresh.length}`;
+    } else {
+      this.lastResult = `${new Date().toLocaleTimeString()}: nothing new`;
+    }
+
+    App.renderQuota();
+    if (App.activeTab === 'arb') Arb.render();
+  },
+
+  /* credit-burn estimate for the current interval */
+  creditsPerHour() { return Math.round(60 / this.prefs().intervalMin) * 3; },
+
+  renderControl() {
+    const p = this.prefs();
+    const permTxt = !this.supported() ? 'no notifications here (use localhost/HTTPS)'
+      : Notification.permission === 'granted' ? 'notifications allowed'
+      : Notification.permission === 'denied' ? 'notifications blocked in browser'
+      : 'notifications not yet allowed';
+
+    return `
+      <div class="card" style="border-top:2px solid var(--giants-red)">
+        <h2>🔔 Watcher</h2>
+        <p class="sub">Keep this tab open and the Palace rescans on its own, pinging you the moment a
+          guaranteed arb or a key-number middle shows up. Alerts arrive as browser notifications
+          (works with the tab open — no closed-app push without a server).</p>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px;">
+          <button class="btn ${this.running ? 'btn-danger' : 'btn-primary'}" id="btn-watch-toggle">
+            ${this.running ? '■ Stop watching' : '▶ Start watching'}</button>
+          <span class="pill ${this.running ? 'good' : ''}">${this.running ? 'watching' : 'idle'}</span>
+          <span class="muted small">${permTxt}</span>
+        </div>
+        <div style="display:flex; gap:14px; align-items:center; flex-wrap:wrap;">
+          <label>Check every
+            <select id="watch-interval" ${this.running ? 'disabled' : ''}>
+              ${[5, 10, 15, 30, 60].map(m => `<option value="${m}" ${m === p.intervalMin ? 'selected' : ''}>${m} min</option>`).join('')}
+            </select>
+          </label>
+          <label><input type="checkbox" id="watch-arbs" ${p.alertArbs ? 'checked' : ''}> arbs</label>
+          <label><input type="checkbox" id="watch-mids" ${p.alertMiddles ? 'checked' : ''}> middles</label>
+          <label><input type="checkbox" id="watch-key" ${p.keyOnly ? 'checked' : ''}> key-number middles only</label>
+        </div>
+        <p class="sub" style="margin-top:8px">
+          Burn rate: <b>${this.creditsPerHour()} credits/hour</b> at this interval
+          (each rescan costs 3). Auto-pauses when credits drop below ${p.minCredits}.
+          ${this.lastResult ? '<br>Last check — ' + this.lastResult : ''}
+        </p>
+      </div>`;
+  },
+
+  wire() {
+    const p = this.prefs();
+    const t = document.getElementById('btn-watch-toggle');
+    if (t) t.onclick = () => this.toggle();
+    const iv = document.getElementById('watch-interval');
+    if (iv) iv.onchange = () => { p.intervalMin = Number(iv.value); Store.save(); Arb.render(); };
+    const a = document.getElementById('watch-arbs');
+    if (a) a.onchange = () => { p.alertArbs = a.checked; Store.save(); };
+    const m = document.getElementById('watch-mids');
+    if (m) m.onchange = () => { p.alertMiddles = m.checked; Store.save(); };
+    const k = document.getElementById('watch-key');
+    if (k) k.onchange = () => { p.keyOnly = k.checked; Store.save(); };
+  },
+};
+
+;
+/* ==== js/recap.js ==== */
+/* Weekly Recap — the Monday-morning damage report. Card records, P&L,
+   best win / worst beat, parlay near-misses, CLV, You vs Model — for one
+   week or the whole season, with a copyable text summary. */
+
+const Recap = {
+  week: null, // null = latest week with bets
+  mode: 'real', // 'real' | 'paper'
+
+  scoped() {
+    return Store.data.bets.filter(b => (b.mode || 'real') === this.mode);
+  },
+
+  weeksWithBets() {
+    const weeks = [...new Set(this.scoped().map(b => b.week).filter(w => w))].sort((a, b) => a - b);
+    return weeks;
+  },
+
+  betsFor(week) {
+    return this.scoped().filter(b => week === 'season' ? true : b.week === week);
+  },
+
+  stats(week) {
+    const bets = this.betsFor(week);
+    const settled = bets.filter(b => b.status !== 'pending');
+    const rec = list => Ledger.record(list);
+
+    const ats = rec(bets.filter(b => b.category === 'card-ats'));
+    const ml = rec(bets.filter(b => b.category === 'card-ml'));
+    const exotic = bets.filter(b => b.category === 'parlay');
+    const exoticRec = rec(exotic);
+
+    let bestWin = null, worstLoss = null;
+    for (const b of settled) {
+      if (b.status === 'won' && (!bestWin || b.profit > bestWin.profit)) bestWin = b;
+      if (b.status === 'lost' && (!worstLoss || b.stake > worstLoss.stake)) worstLoss = b;
+    }
+
+    let nearMiss = null;
+    for (const p of exotic) {
+      if (p.status !== 'lost' || !p.legs) continue;
+      const hit = p.legs.filter(l => l.status === 'won').length;
+      if (p.legs.length >= 3 && (!nearMiss || hit / p.legs.length > nearMiss.hit / nearMiss.total)) {
+        nearMiss = { hit, total: p.legs.length, bet: p };
+      }
+    }
+
+    const flipped = settled.filter(b => b.source === 'user' && (b.type === 'ats' || b.type === 'ml'));
+    const you = rec(flipped);
+    const model = { w: you.l, l: you.w, p: you.p };
+
+    const clvPts = settled.filter(b => b.clvKind === 'pts');
+    const avgClv = clvPts.length ? clvPts.reduce((s, b) => s + b.clv, 0) / clvPts.length : null;
+
+    const favBets = settled.filter(b =>
+      App.isFavGame(b) || (b.legs || []).some(l => App.isFavGame(l)));
+    const favRec = rec(favBets);
+
+    return {
+      bets, settled,
+      staked: bets.reduce((s, b) => s + b.stake, 0),
+      net: settled.reduce((s, b) => s + (b.profit || 0), 0),
+      pending: bets.length - settled.length,
+      ats, ml, exotic, exoticRec,
+      bestWin, worstLoss, nearMiss,
+      you, model, flippedCount: flipped.length,
+      avgClv, favRec, favCount: favBets.length,
+    };
+  },
+
+  describeBet(b) {
+    if (!b) return '—';
+    if (b.type === 'parlay' || b.type === 'teaser') return b.pick;
+    const pt = b.type === 'ats' ? ' ' + (b.point > 0 ? '+' : '') + b.point : '';
+    return `${App.short(b.pick)}${pt} ${MMath.formatAmerican(b.price)}`;
+  },
+
+  summaryText(week, s) {
+    const wk = week === 'season' ? 'Season to date' : 'Week ' + week;
+    const lines = [
+      `🏈 Pro's Fantasy Palace — ${wk} recap${this.mode === 'paper' ? ' (📋 paper / accuracy test)' : ''}`,
+      `Net: ${MMath.money(s.net)} on ${MMath.money(s.staked)} staked${s.pending ? ` (${s.pending} pending)` : ''}`,
+      `ATS card: ${Ledger.fmtRecord(s.ats)} (${MMath.money(s.ats.profit)})`,
+      `Straight up: ${Ledger.fmtRecord(s.ml)} (${MMath.money(s.ml.profit)})`,
+      `Parlays/teasers: ${s.exoticRec.w}/${s.exotic.length} hit (${MMath.money(s.exoticRec.profit)})`,
+    ];
+    if (s.nearMiss) lines.push(`Closest lightning: ${s.nearMiss.hit}/${s.nearMiss.total} legs 😤`);
+    if (s.bestWin) lines.push(`Best win: ${this.describeBet(s.bestWin)} (+${MMath.money(s.bestWin.profit).slice(1)})`);
+    if (s.flippedCount) lines.push(`You vs Model: ${Ledger.fmtRecord(s.you)} vs ${Ledger.fmtRecord(s.model)} on flipped picks`);
+    if (s.avgClv !== null) lines.push(`Avg CLV: ${(s.avgClv > 0 ? '+' : '') + s.avgClv.toFixed(2)} pts vs close`);
+    if (s.favCount) lines.push(`${App.short(App.fav())} bets: ${Ledger.fmtRecord(s.favRec)} (${MMath.money(s.favRec.profit)})`);
+    return lines.join('\n');
+  },
+
+  modeBar() {
+    return `<div style="display:flex; gap:6px; margin-bottom:12px;">
+      <button class="btn btn-sm ${this.mode === 'real' ? 'btn-primary' : ''}" data-recap-mode="real">💵 Real</button>
+      <button class="btn btn-sm ${this.mode === 'paper' ? 'btn-primary' : ''}" data-recap-mode="paper">📋 Paper (accuracy test)</button>
+    </div>`;
+  },
+
+  render() {
+    const el = document.getElementById('tab-recap');
+
+    if (!Store.data.bets.length) {
+      el.innerHTML = `<div class="card"><div class="empty">
+        No bets logged yet — the recap writes itself once you've got a week in the books.
+      </div></div>`;
+      return;
+    }
+
+    const weeks = this.weeksWithBets();
+    if (!weeks.length) {
+      el.innerHTML = `<div class="card"><h2>Recap</h2>${this.modeBar()}
+        <div class="empty">No ${this.mode} bets yet.
+        ${this.mode === 'paper' ? 'Hit “Paper-trade the card” on the Weekly Card to start an accuracy test.' : ''}</div></div>`;
+      el.querySelectorAll('[data-recap-mode]').forEach(b => {
+        b.onclick = () => { this.mode = b.dataset.recapMode; this.render(); };
+      });
+      return;
+    }
+    // keep the selected week valid for this mode
+    if (this.week !== 'season' && !weeks.includes(this.week)) this.week = null;
+    if (this.week === null) this.week = weeks[weeks.length - 1];
+    const s = this.stats(this.week);
+    const wkLabel = this.week === 'season' ? 'Season to date' : 'Week ' + this.week;
+
+    const opts = weeks.map(w =>
+      `<option value="${w}" ${this.week === w ? 'selected' : ''}>Week ${w}</option>`).join('')
+      + `<option value="season" ${this.week === 'season' ? 'selected' : ''}>Season to date</option>`;
+
+    const tile = (label, value, sub, cls) => `
+      <div class="tile"><div class="t-label">${label}</div>
+        <div class="t-value ${cls || ''}">${value}</div>
+        <div class="t-sub">${sub || ''}</div></div>`;
+
+    el.innerHTML = `
+      <div class="hero"><span class="hero-ball">🏈</span>
+        <div class="hero-kicker">The damage report</div>
+        <div class="hero-line">${wkLabel}</div>
+        <div class="hero-sub">${s.bets.length} bets · ${MMath.money(s.staked)} staked${s.pending ? ` · ${s.pending} still pending` : ''}</div>
+        <div class="hero-take ${s.net >= 0 ? 'pos' : 'neg'}">
+          ${s.net >= 0 ? '📈 Up ' + MMath.money(s.net) : '📉 Down ' + MMath.money(Math.abs(s.net))}
+          ${s.net >= 0 ? '— cash it and act like you\'ve been here.' : '— the vig never sleeps. CLV tells the real story below.'}</div>
+      </div>
+
+      <div class="card">
+        <h2>Recap</h2>
+        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px;">
+          <label>Show <select id="recap-week">${opts}</select></label>
+          <button class="btn btn-sm ${this.mode === 'real' ? 'btn-primary' : ''}" data-recap-mode="real">💵 Real</button>
+          <button class="btn btn-sm ${this.mode === 'paper' ? 'btn-primary' : ''}" data-recap-mode="paper">📋 Paper</button>
+          <button class="btn btn-sm" id="btn-copy-recap">📋 Copy text recap</button>
+        </div>
+        <div class="tiles">
+          ${tile('Net P&L', MMath.money(s.net), MMath.money(s.staked) + ' staked', s.net >= 0 ? 'pos' : 'neg')}
+          ${tile('ATS card', Ledger.fmtRecord(s.ats), MMath.money(s.ats.profit))}
+          ${tile('Straight up', Ledger.fmtRecord(s.ml), MMath.money(s.ml.profit))}
+          ${tile('Lightning', `${s.exoticRec.w}/${s.exotic.length}`, s.nearMiss ? `closest: ${s.nearMiss.hit}/${s.nearMiss.total} legs` : MMath.money(s.exoticRec.profit))}
+          ${tile('Best win', this.describeBet(s.bestWin), s.bestWin ? '+' + MMath.money(s.bestWin.profit).slice(1) : '')}
+          ${tile('You vs Model', s.flippedCount ? Ledger.fmtRecord(s.you) + ' <span class="muted small">vs</span> ' + Ledger.fmtRecord(s.model) : '—',
+            s.flippedCount ? 'on flipped picks' : 'no flips this week')}
+          ${tile('Avg CLV', s.avgClv === null ? '—' : (s.avgClv > 0 ? '+' : '') + s.avgClv.toFixed(2) + ' pts',
+            'beat the close = real edge', s.avgClv > 0 ? 'pos' : s.avgClv < 0 ? 'neg' : '')}
+          ${tile('🏈 ' + App.short(App.fav()), s.favCount ? Ledger.fmtRecord(s.favRec) : '—',
+            s.favCount ? MMath.money(s.favRec.profit) + ' with the heart' : 'no Big Blue action')}
+        </div>
+        <h3>Copy-ready summary</h3>
+        <pre id="recap-text" style="background:var(--page); border:1px solid var(--border); border-radius:8px; padding:12px; white-space:pre-wrap; font-family:var(--font); color:var(--ink-2); font-size:13px;">${this.summaryText(this.week, s)}</pre>
+      </div>`;
+
+    document.getElementById('recap-week').onchange = e => {
+      this.week = e.target.value === 'season' ? 'season' : Number(e.target.value);
+      this.render();
+    };
+    el.querySelectorAll('[data-recap-mode]').forEach(b => {
+      b.onclick = () => { this.mode = b.dataset.recapMode; this.render(); };
+    });
+    document.getElementById('btn-copy-recap').onclick = async () => {
+      const text = document.getElementById('recap-text').textContent;
+      try {
+        await navigator.clipboard.writeText(text);
+        App.banner('Recap copied — paste it in the group chat. 📋', 'good');
+      } catch (e) {
+        App.banner('Copy blocked by the browser — select the text and copy manually.', 'warn');
+      }
+    };
+  },
+};
+
+;
+/* ==== js/ledger.js ==== */
+/* The Ledger — every bet tracked, graded, and judged.
+   Auto-settles from final scores, computes closing line value (CLV),
+   and keeps the season honest: You vs Model, category P&L, near-misses. */
+
+const Ledger = {
+
+  /* ---------- grading ---------- */
+
+  gradeLeg(leg, game) {
+    // game: completed /scores entry. Returns 'won' | 'lost' | 'push' | null.
+    if (!game || !game.completed || !game.scores) return null;
+    const hs = game.scores.find(s => s.name === game.home_team);
+    const as = game.scores.find(s => s.name === game.away_team);
+    if (!hs || !as) return null;
+    const homePts = Number(hs.score), awayPts = Number(as.score);
+
+    if (leg.market === 'h2h' || leg.type === 'ml') {
+      const pick = leg.name || leg.pick;
+      const pickPts = pick === game.home_team ? homePts : awayPts;
+      const otherPts = pick === game.home_team ? awayPts : homePts;
+      return pickPts > otherPts ? 'won' : pickPts < otherPts ? 'lost' : 'push';
+    }
+    if (leg.market === 'spreads' || leg.type === 'ats') {
+      const pick = leg.name || leg.pick;
+      const pickPts = pick === game.home_team ? homePts : awayPts;
+      const otherPts = pick === game.home_team ? awayPts : homePts;
+      const adj = pickPts + leg.point - otherPts;
+      return adj > 0 ? 'won' : adj < 0 ? 'lost' : 'push';
+    }
+    if (leg.market === 'totals' || leg.type === 'total') {
+      const total = homePts + awayPts;
+      const over = (leg.name || leg.pick) === 'Over';
+      if (total === leg.point) return 'push';
+      return (total > leg.point) === over ? 'won' : 'lost';
+    }
+    return null; // custom — manual only
+  },
+
+  profitFor(bet, status) {
+    if (status === 'won') return bet.stake * (MMath.americanToDecimal(bet.price) - 1);
+    if (status === 'push') return 0;
+    return -bet.stake;
+  },
+
+  /* Settle everything possible from a /scores payload. Returns count settled. */
+  settleFromScores(games) {
+    const byId = {};
+    for (const g of games) byId[g.id] = g;
+    let settled = 0;
+
+    for (const bet of Store.data.bets) {
+      if (bet.status !== 'pending') continue;
+
+      if (bet.legs) {
+        let changed = false;
+        for (const leg of bet.legs) {
+          if (leg.status !== 'pending' || leg.custom || leg.prop || !leg.eventId) continue;
+          const r = this.gradeLeg(leg, byId[leg.eventId]);
+          if (r) { leg.status = r; changed = true; }
+        }
+        if (changed || bet.legs.some(l => l.status !== 'pending')) {
+          if (bet.type === 'teaser') this.resolveTeaser(bet); else this.resolveParlay(bet);
+          if (bet.status !== 'pending') settled++;
+        }
+        continue;
+      }
+
+      const game = byId[bet.eventId];
+      const r = this.gradeLeg(bet, game);
+      if (r) {
+        bet.status = r;
+        bet.settledAt = Date.now();
+        bet.profit = this.profitFor(bet, r);
+        this.computeClv(bet);
+        settled++;
+      }
+    }
+    Store.save();
+    return settled;
+  },
+
+  /* A parlay resolves as lost on any lost leg; as won when every leg is
+     won or push (pushed legs drop out of the payout). */
+  resolveParlay(bet) {
+    if (bet.legs.some(l => l.status === 'lost')) {
+      bet.status = 'lost';
+      bet.settledAt = Date.now();
+      bet.profit = -bet.stake;
+      return;
+    }
+    if (bet.legs.every(l => l.status === 'won' || l.status === 'push')) {
+      // remove pushed legs from the combined price
+      let dec = MMath.americanToDecimal(bet.price);
+      for (const l of bet.legs) {
+        if (l.status === 'push') dec /= MMath.americanToDecimal(l.price);
+      }
+      if (bet.legs.every(l => l.status === 'push')) { bet.status = 'push'; bet.profit = 0; }
+      else { bet.status = 'won'; bet.profit = bet.stake * (dec - 1); }
+      bet.settledAt = Date.now();
+    }
+  },
+
+  manualSettle(betId, status) {
+    const bet = Store.data.bets.find(b => b.id === betId);
+    if (!bet) return;
+    bet.status = status;
+    bet.settledAt = Date.now();
+    bet.profit = (bet.type === 'parlay' || bet.type === 'teaser') && status === 'won'
+      ? bet.stake * (MMath.americanToDecimal(bet.price) - 1)
+      : this.profitFor(bet, status);
+    if (!bet.legs) this.computeClv(bet);
+    Store.save();
+    this.render();
+    App.renderSpend();
+  },
+
+  /* Teasers: any lost leg loses; pushes drop the teaser to the payout
+     tier for the remaining leg count; below 2 live legs it's a push. */
+  resolveTeaser(bet) {
+    if (bet.legs.some(l => l.status === 'lost')) {
+      bet.status = 'lost';
+      bet.settledAt = Date.now();
+      bet.profit = -bet.stake;
+      return;
+    }
+    if (!bet.legs.every(l => l.status === 'won' || l.status === 'push')) return;
+    const wonCount = bet.legs.filter(l => l.status === 'won').length;
+    bet.settledAt = Date.now();
+    if (wonCount === bet.legs.length) {
+      bet.status = 'won';
+      bet.profit = bet.stake * (MMath.americanToDecimal(bet.price) - 1);
+    } else if (wonCount >= 2 && bet.teaserTable && bet.teaserTable[wonCount]) {
+      bet.status = 'won';
+      bet.profit = bet.stake * (MMath.americanToDecimal(bet.teaserTable[wonCount]) - 1);
+    } else {
+      bet.status = 'push';
+      bet.profit = 0;
+    }
+  },
+
+  manualSettleLeg(betId, legIdx, status) {
+    const bet = Store.data.bets.find(b => b.id === betId);
+    if (!bet || !bet.legs || !bet.legs[legIdx]) return;
+    bet.legs[legIdx].status = status;
+    if (bet.type === 'teaser') this.resolveTeaser(bet); else this.resolveParlay(bet);
+    Store.save();
+    this.render();
+  },
+
+  deleteBet(betId) {
+    Store.data.bets = Store.data.bets.filter(b => b.id !== betId);
+    Store.save();
+    this.render();
+    App.renderSpend();
+  },
+
+  /* ---------- closing line value ---------- */
+
+  computeClv(bet) {
+    const snap = Store.data.closing[bet.eventId];
+    if (!snap) return;
+    const ev = snap.event;
+    const market = bet.type === 'ats' ? 'spreads' : bet.type === 'ml' ? 'h2h' : bet.type === 'total' ? 'totals' : null;
+    if (!market) return;
+    const m = Api.market(ev, bet.book, market) || Api.market(ev, Store.data.settings.primaryBook, market);
+    const o = m && (m.outcomes || []).find(x => x.name === bet.pick);
+    if (!o) return;
+    if (market === 'spreads' || market === 'totals') {
+      // points of line value vs close (positive = you beat the close)
+      const sign = (market === 'totals' && bet.pick === 'Over') ? -1 : 1;
+      bet.clv = sign * (bet.point - o.point);
+      bet.clvKind = 'pts';
+    } else {
+      // moneyline: implied-probability edge vs close
+      bet.clv = MMath.americanToImplied(o.price) - MMath.americanToImplied(bet.price);
+      bet.clvKind = 'prob';
+    }
+  },
+
+  /* ---------- stats ---------- */
+
+  record(bets) {
+    const r = { w: 0, l: 0, p: 0, profit: 0 };
+    for (const b of bets) {
+      if (b.status === 'won') r.w++;
+      else if (b.status === 'lost') r.l++;
+      else if (b.status === 'push') r.p++;
+      if (b.status !== 'pending') r.profit += b.profit || 0;
+    }
+    return r;
+  },
+
+  fmtRecord(r) { return `${r.w}–${r.l}${r.p ? '–' + r.p : ''}`; },
+
+  filter: 'all', // 'all' | 'real' | 'paper'
+
+  visibleBets() {
+    if (this.filter === 'all') return Store.data.bets;
+    return Store.data.bets.filter(b => (b.mode || 'real') === this.filter);
+  },
+
+  stats() {
+    const bets = this.visibleBets();
+    const settled = bets.filter(b => b.status !== 'pending');
+    const ats = bets.filter(b => b.category === 'card-ats');
+    const ml = bets.filter(b => b.category === 'card-ml');
+    const parlays = bets.filter(b => b.category === 'parlay');
+
+    // You vs Model on flipped picks: your result vs the mirror result
+    const flipped = settled.filter(b => b.source === 'user' && (b.type === 'ats' || b.type === 'ml'));
+    const you = this.record(flipped);
+    const model = { w: you.l, l: you.w, p: you.p };
+
+    // best near-miss parlay
+    let nearMiss = null;
+    for (const p of parlays) {
+      if (p.status !== 'lost') continue;
+      const hit = p.legs.filter(l => l.status === 'won').length;
+      if (!nearMiss || hit / p.legs.length > nearMiss.hit / nearMiss.total) {
+        nearMiss = { hit, total: p.legs.length };
+      }
+    }
+
+    // bets involving the user's team (singles on their game, parlays with a leg in it)
+    const fav = App.fav();
+    const favBets = bets.filter(b =>
+      App.isFavGame(b) || (b.legs || []).some(l => App.isFavGame(l)));
+    const favRec = this.record(favBets);
+
+    // average CLV over singles that have it
+    const clvPts = settled.filter(b => b.clvKind === 'pts');
+    const avgClv = clvPts.length
+      ? clvPts.reduce((s, b) => s + b.clv, 0) / clvPts.length : null;
+
+    return {
+      net: settled.reduce((s, b) => s + (b.profit || 0), 0),
+      staked: bets.reduce((s, b) => s + b.stake, 0),
+      pending: bets.filter(b => b.status === 'pending').length,
+      ats: this.record(ats),
+      ml: this.record(ml),
+      parlays: this.record(parlays),
+      parlayCount: parlays.length,
+      nearMiss, you, model, flippedCount: flipped.length, avgClv,
+      fav, favRec, favCount: favBets.length,
+    };
+  },
+
+  /* ---------- chart ---------- */
+
+  SERIES: [
+    { key: 'card-ats', label: 'ATS card', color: 'var(--series-1)', hex: '#5b8ee8' },
+    { key: 'card-ml', label: 'ML card', color: 'var(--series-2)', hex: '#d9535f' },
+    { key: 'parlay', label: 'Parlays', color: 'var(--series-3)', hex: '#2aa79c' },
+  ],
+
+  chartData() {
+    const out = [];
+    for (const s of this.SERIES) {
+      const bets = this.visibleBets()
+        .filter(b => b.category === s.key && b.status !== 'pending')
+        .sort((a, b) => (a.settledAt || a.createdAt) - (b.settledAt || b.createdAt));
+      let cum = 0;
+      const pts = bets.map(b => {
+        cum += b.profit || 0;
+        return { t: b.settledAt || b.createdAt, v: cum, bet: b };
+      });
+      if (pts.length) out.push({ series: s, pts });
+    }
+    return out;
+  },
+
+  renderChart(data) {
+    const W = 720, H = 220, padL = 44, padR = 90, padT = 12, padB = 24;
+    const allPts = data.flatMap(d => d.pts);
+    const t0 = Math.min(...allPts.map(p => p.t));
+    const t1 = Math.max(...allPts.map(p => p.t));
+    const v0 = Math.min(0, ...allPts.map(p => p.v));
+    const v1 = Math.max(0, ...allPts.map(p => p.v));
+    const span = Math.max(v1 - v0, 1);
+    const x = t => t1 === t0 ? padL + (W - padL - padR) / 2
+      : padL + (t - t0) / (t1 - t0) * (W - padL - padR);
+    const y = v => padT + (1 - (v - v0) / span) * (H - padT - padB);
+
+    // gridlines: zero + min/max
+    const yTicks = [...new Set([0, v0, v1])];
+    const grid = yTicks.map(v => `
+      <line x1="${padL}" x2="${W - padR}" y1="${y(v)}" y2="${y(v)}"
+        stroke="${v === 0 ? 'var(--baseline)' : 'var(--grid)'}" stroke-width="1"/>
+      <text x="${padL - 6}" y="${y(v) + 4}" text-anchor="end" font-size="10"
+        fill="var(--muted)">${v < 0 ? '-' : ''}$${Math.abs(v).toFixed(0)}</text>`).join('');
+
+    const lines = data.map(d => {
+      const path = d.pts.map((p, i) => (i ? 'L' : 'M') + x(p.t).toFixed(1) + ' ' + y(p.v).toFixed(1)).join(' ');
+      const last = d.pts[d.pts.length - 1];
+      // keep the end label inside the plot: flip it to the left of the dot
+      // when the line ends close to the right edge
+      const flip = x(last.t) > W - padR - 20;
+      return `
+        <path d="${path}" fill="none" stroke="${d.series.color}" stroke-width="2"
+          stroke-linejoin="round" stroke-linecap="round"/>
+        <circle cx="${x(last.t)}" cy="${y(last.v)}" r="3" fill="${d.series.color}"/>
+        <text x="${x(last.t) + (flip ? -7 : 7)}" y="${y(last.v) + 4}" font-size="11" font-weight="600"
+          text-anchor="${flip ? 'end' : 'start'}" fill="var(--ink-2)">${d.series.label} ${MMath.money(last.v)}</text>`;
+    }).join('');
+
+    const legend = data.map(d => `
+      <span><span class="swatch" style="background:${d.series.color}"></span>${d.series.label}</span>`).join('');
+
+    return `
+      <div class="chart-box" id="pl-chart" data-t0="${t0}" data-t1="${t1}">
+        <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Cumulative profit and loss by bet category">
+          ${grid}${lines}
+          <rect id="pl-hover" x="${padL}" y="${padT}" width="${W - padL - padR}" height="${H - padT - padB}"
+            fill="transparent"/>
+        </svg>
+        <div class="chart-legend">${legend}</div>
+      </div>`;
+  },
+
+  wireChart(data) {
+    const box = document.getElementById('pl-chart');
+    if (!box) return;
+    const svg = box.querySelector('svg');
+    const tip = document.getElementById('tooltip');
+    const allPts = data.flatMap(d => d.pts.map(p => Object.assign({ series: d.series }, p)));
+
+    svg.addEventListener('mousemove', e => {
+      const rect = svg.getBoundingClientRect();
+      const W = 720, padL = 44, padR = 90;
+      const t0 = +box.dataset.t0, t1 = +box.dataset.t1;
+      const mx = (e.clientX - rect.left) / rect.width * W;
+      const t = t1 === t0 ? t0 : t0 + (mx - padL) / (W - padL - padR) * (t1 - t0);
+      let best = null;
+      for (const p of allPts) {
+        if (!best || Math.abs(p.t - t) < Math.abs(best.t - t)) best = p;
+      }
+      if (!best) return;
+      const b = best.bet;
+      tip.innerHTML = `
+        <div class="tt-title">${new Date(best.t).toLocaleDateString()} · ${best.series.label}</div>
+        <div>${b.pick}${b.point !== null && b.point !== undefined && b.type === 'ats' ? ' ' + (b.point > 0 ? '+' : '') + b.point : ''}
+          — ${b.status} ${MMath.money(b.profit || 0)}</div>
+        <div>running total: <b>${MMath.money(best.v)}</b></div>`;
+      tip.hidden = false;
+      tip.style.left = Math.min(e.clientX + 14, window.innerWidth - 280) + 'px';
+      tip.style.top = (e.clientY + 14) + 'px';
+    });
+    svg.addEventListener('mouseleave', () => { tip.hidden = true; });
+  },
+
+  /* ---------- render ---------- */
+
+  render() {
+    const el = document.getElementById('tab-ledger');
+    const s = this.stats();
+    const bets = [...this.visibleBets()].sort((a, b) => b.createdAt - a.createdAt);
+
+    const realCount = Store.data.bets.filter(b => (b.mode || 'real') === 'real').length;
+    const paperCount = Store.data.bets.filter(b => b.mode === 'paper').length;
+    const fbtn = (key, label) =>
+      `<button class="btn btn-sm ${this.filter === key ? 'btn-primary' : ''}" data-filter="${key}">${label}</button>`;
+    const filterBar = `
+      <div style="display:flex; gap:6px; align-items:center; margin-bottom:12px; flex-wrap:wrap;">
+        ${fbtn('all', 'All')}
+        ${fbtn('real', '💵 Real money')}
+        ${fbtn('paper', '📋 Paper (test)')}
+        <span class="muted small" style="margin-left:6px">${realCount} real · ${paperCount} paper</span>
+        ${this.filter === 'paper' ? '<span class="pill info">accuracy test — no real money</span>' : ''}
+      </div>`;
+
+    const netLabel = this.filter === 'paper' ? 'Paper P&amp;L (hypothetical)'
+      : this.filter === 'real' ? 'Net P&amp;L (real)' : 'Net P&amp;L';
+    const tiles = `
+      <div class="tiles">
+        <div class="tile"><div class="t-label">${netLabel}</div>
+          <div class="t-value ${s.net >= 0 ? 'pos' : 'neg'}">${MMath.money(s.net)}</div>
+          <div class="t-sub">${MMath.money(s.staked)} staked · ${s.pending} pending</div></div>
+        <div class="tile"><div class="t-label">ATS card</div>
+          <div class="t-value">${this.fmtRecord(s.ats)}</div>
+          <div class="t-sub">${MMath.money(s.ats.profit)} · need 52.4% to profit</div></div>
+        <div class="tile"><div class="t-label">Straight up card</div>
+          <div class="t-value">${this.fmtRecord(s.ml)}</div>
+          <div class="t-sub">${MMath.money(s.ml.profit)}</div></div>
+        <div class="tile"><div class="t-label">Parlays</div>
+          <div class="t-value">${s.parlays.w}/${s.parlayCount}</div>
+          <div class="t-sub">${s.nearMiss ? 'closest call: ' + s.nearMiss.hit + '/' + s.nearMiss.total + ' legs' : MMath.money(s.parlays.profit)}</div></div>
+        <div class="tile"><div class="t-label">You vs Model</div>
+          <div class="t-value">${s.flippedCount ? this.fmtRecord(s.you) + ' <span class="muted small">vs</span> ' + this.fmtRecord(s.model) : '—'}</div>
+          <div class="t-sub">${s.flippedCount ? 'on your ' + s.flippedCount + ' flipped picks' : 'flip a pick on the card to start the duel'}</div></div>
+        <div class="tile fav-tile"><div class="t-label">🏈 ${App.short(s.fav)} bets</div>
+          <div class="t-value">${s.favCount ? this.fmtRecord(s.favRec) : '—'}</div>
+          <div class="t-sub">${s.favCount ? MMath.money(s.favRec.profit) + ' betting with your heart' : 'no ' + App.short(s.fav) + ' action yet'}</div></div>
+        <div class="tile"><div class="t-label">Avg CLV (spread)</div>
+          <div class="t-value ${s.avgClv > 0 ? 'pos' : s.avgClv < 0 ? 'neg' : ''}">${s.avgClv === null ? '—' : (s.avgClv > 0 ? '+' : '') + s.avgClv.toFixed(2) + ' pts'}</div>
+          <div class="t-sub">beat the close = real edge</div></div>
+      </div>`;
+
+    const data = this.chartData();
+    const chart = data.length && data.some(d => d.pts.length >= 2)
+      ? `<div class="card"><h2>Season P&amp;L</h2>
+           <p class="sub">Cumulative profit by category. Hover for the bet behind each step.</p>
+           ${this.renderChart(data)}</div>`
+      : '';
+
+    const rows = bets.map(b => this.renderBetRow(b)).join('');
+    const table = bets.length ? `
+      <div class="card">
+        <h2>All bets (${bets.length})</h2>
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr>
+              <th>Placed</th><th>Wk</th><th>Bet</th><th>Book</th>
+              <th class="num">Odds</th><th class="num">Stake</th>
+              <th>Status</th><th class="num">P&amp;L</th><th class="num">CLV</th><th></th>
+            </tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>` : `
+      <div class="card"><div class="empty">No ${this.filter === 'paper' ? 'paper' : this.filter === 'real' ? 'real' : ''} bets logged yet.
+        Lock a Weekly Card or log a Lightning Lab ticket to get started.</div></div>`;
+
+    el.innerHTML = filterBar + tiles + chart + table;
+
+    el.querySelectorAll('[data-filter]').forEach(b => {
+      b.onclick = () => { this.filter = b.dataset.filter; this.render(); };
+    });
+    if (chart) this.wireChart(data);
+    el.querySelectorAll('[data-settle]').forEach(b => {
+      b.onclick = () => this.manualSettle(b.dataset.bet, b.dataset.settle);
+    });
+    el.querySelectorAll('[data-legsettle]').forEach(b => {
+      b.onclick = () => this.manualSettleLeg(b.dataset.bet, +b.dataset.leg, b.dataset.legsettle);
+    });
+    el.querySelectorAll('[data-del]').forEach(b => {
+      b.onclick = () => { if (confirm('Delete this bet?')) this.deleteBet(b.dataset.del); };
+    });
+  },
+
+  renderBetRow(b) {
+    const date = new Date(b.createdAt).toLocaleDateString(undefined, { month: 'numeric', day: 'numeric' });
+    const statusPill = ({
+      pending: '<span class="pill">pending</span>',
+      won: '<span class="pill good">won</span>',
+      lost: '<span class="pill bad">lost</span>',
+      push: '<span class="pill push">push</span>',
+    }[b.status] || b.status)
+      + (b.mode === 'paper' ? ' <span class="pill info" title="paper bet — no real money">📋</span>' : '');
+
+    let desc;
+    if (b.legs) {
+      const legs = b.legs.map((l, i) => {
+        const mark = l.status === 'won' ? '✓' : l.status === 'lost' ? '✗' : l.status === 'push' ? '≈' : '·';
+        const cls = l.status === 'won' ? 'pos' : l.status === 'lost' ? 'neg' : 'muted';
+        const manual = ((l.custom || l.prop) && l.status === 'pending' && b.status === 'pending')
+          ? ` <button class="btn btn-sm" data-legsettle="won" data-bet="${b.id}" data-leg="${i}">✓</button>
+              <button class="btn btn-sm" data-legsettle="lost" data-bet="${b.id}" data-leg="${i}">✗</button>`
+          : '';
+        return `<span class="${cls}">${mark}</span> ${l.label}${manual}`;
+      }).join('<br>');
+      desc = `<b>${b.pick}</b><div class="small" style="margin-top:3px">${legs}</div>`;
+    } else {
+      const pt = b.type === 'ats' ? ' ' + (b.point > 0 ? '+' : '') + b.point
+        : b.type === 'total' ? ' ' + b.point : '';
+      const kind = { ats: 'ATS', ml: 'ML', total: 'TOT' }[b.type] || b.type;
+      const src = b.source === 'user' ? '<span class="tag-user small">you</span>' : '<span class="tag-model small">model</span>';
+      const matchup = b.away ? `<span class="muted small">${App.short(b.away)} @ ${App.short(b.home)}</span>` : '';
+      desc = `<span class="muted small">${kind}</span> <b>${App.short(b.pick)}${pt}</b> ${src}<br>${matchup}`;
+    }
+
+    const clv = b.clv === undefined ? '—'
+      : b.clvKind === 'pts' ? (b.clv > 0 ? '+' : '') + b.clv.toFixed(1)
+      : (b.clv > 0 ? '+' : '') + (b.clv * 100).toFixed(1) + '%';
+
+    const manual = b.status === 'pending' ? `
+      <button class="btn btn-sm" title="mark won" data-settle="won" data-bet="${b.id}">✓</button>
+      <button class="btn btn-sm" title="mark lost" data-settle="lost" data-bet="${b.id}">✗</button>` : '';
+
+    return `<tr>
+      <td class="muted">${date}</td>
+      <td class="muted">${b.week || '—'}</td>
+      <td>${desc}</td>
+      <td class="muted">${App.bookName(b.book)}</td>
+      <td class="num">${MMath.formatAmerican(b.price)}</td>
+      <td class="num">${MMath.money(b.stake)}</td>
+      <td>${statusPill}</td>
+      <td class="num ${b.profit > 0 ? 'pos' : b.profit < 0 ? 'neg' : ''}">${b.status === 'pending' ? '—' : MMath.money(b.profit || 0)}</td>
+      <td class="num muted">${clv}</td>
+      <td style="white-space:nowrap">${manual}
+        <button class="btn btn-sm btn-danger" title="delete" data-del="${b.id}">🗑</button></td>
+    </tr>`;
+  },
+};
+
+;
+/* ==== js/app.js ==== */
+/* App shell: tabs, refresh actions, settings, shared helpers. */
+
+const App = {
+  activeTab: 'card',
+  // Tuesday before the 2026 NFL kickoff — week boundaries run Tue→Mon
+  WEEK1: Date.UTC(2026, 8, 8),
+
+  /* ---------- helpers ---------- */
+
+  short(team) {
+    if (!team) return '—';
+    const parts = team.split(' ');
+    return parts.length > 1 ? parts[parts.length - 1] : team;
+  },
+
+  bookName(key) {
+    return { fanduel: 'FanDuel', draftkings: 'DraftKings' }[key] || key || '—';
+  },
+
+  fav() { return Store.data.settings.favoriteTeam; },
+  isFav(team) { return !!team && team === this.fav(); },
+  isFavGame(objWithTeams) {
+    return !!objWithTeams &&
+      (this.isFav(objWithTeams.home_team || objWithTeams.home) ||
+       this.isFav(objWithTeams.away_team || objWithTeams.away));
+  },
+
+  weekOf(t) {
+    const w = Math.floor((t - this.WEEK1) / (7 * 864e5)) + 1;
+    return (w >= 1 && w <= 23) ? w : null;
+  },
+
+  banner(msg, cls) {
+    const el = document.getElementById('banner');
+    el.textContent = msg;
+    el.className = 'banner' + (cls ? ' ' + cls : '');
+    el.hidden = false;
+    clearTimeout(this._bannerTimer);
+    if (cls === 'good' || !cls) {
+      this._bannerTimer = setTimeout(() => { el.hidden = true; }, 8000);
+    }
+  },
+
+  renderQuota() {
+    const el = document.getElementById('quota-badge');
+    const q = Store.data.quota;
+    el.textContent = q ? `API: ${q.remaining} left` : '';
+  },
+
+  renderSpend() {
+    const week = this.weekOf(Date.now());
+    const cap = Store.data.settings.weeklyCap;
+    if (!cap) return;
+    const spent = Store.data.bets
+      .filter(b => this.weekOf(b.createdAt) === week && (b.mode || 'real') === 'real')
+      .reduce((s, b) => s + b.stake, 0);
+    if (spent > cap) {
+      this.banner(`Heads up: ${MMath.money(spent)} staked this week — over your ${MMath.money(cap)} cap. The lightning can wait for next week.`, 'warn');
+    }
+  },
+
+  /* ---------- tabs ---------- */
+
+  showTab(name) {
+    this.activeTab = name;
+    document.querySelectorAll('.tab').forEach(t =>
+      t.classList.toggle('active', t.dataset.tab === name));
+    document.querySelectorAll('.tab-panel').forEach(p =>
+      p.hidden = p.id !== 'tab-' + name);
+    this.renderTab(name);
+  },
+
+  renderTab(name) {
+    if (name === 'card') Card.render();
+    else if (name === 'lab') Parlay.render();
+    else if (name === 'shop') LineShop.render();
+    else if (name === 'arb') Arb.render();
+    else if (name === 'ledger') Ledger.render();
+    else if (name === 'recap') Recap.render();
+    else if (name === 'settings') this.renderSettings();
+  },
+
+  renderAll() {
+    this.renderTab(this.activeTab);
+    this.renderQuota();
+  },
+
+  /* ---------- actions ---------- */
+
+  async refreshOdds() {
+    const btn = document.getElementById('btn-refresh-odds');
+    btn.disabled = true;
+    try {
+      const events = await Api.fetchOdds();
+      this.banner(`Odds updated — ${events.length} games in the feed. (3 API credits used)`, 'good');
+    } catch (e) {
+      this.banner(e.message, 'error');
+    }
+    btn.disabled = false;
+    this.renderAll();
+  },
+
+  async refreshScores() {
+    const btn = document.getElementById('btn-refresh-scores');
+    btn.disabled = true;
+    try {
+      const games = await Api.fetchScores();
+      const applied = Elo.applyScores(games);
+      const settled = Ledger.settleFromScores(games);
+      this.banner(`Scores in: settled ${settled} bet${settled === 1 ? '' : 's'}, model learned from ${applied} final${applied === 1 ? '' : 's'}. (2 API credits used)`, 'good');
+    } catch (e) {
+      this.banner(e.message, 'error');
+    }
+    btn.disabled = false;
+    this.renderAll();
+  },
+
+  /* ---------- settings ---------- */
+
+  renderSettings() {
+    const el = document.getElementById('tab-settings');
+    const s = Store.data.settings;
+    const elo = Elo.ensure();
+    const ratings = Object.entries(elo.ratings).sort((a, b) => b[1] - a[1]);
+    const mean = ratings.reduce((sum, r) => sum + r[1], 0) / ratings.length;
+
+    const ratingRows = ratings.map(([team, r], i) => `
+      <tr><td class="muted">${i + 1}</td><td>${team}</td>
+      <td class="num">${Math.round(r)}</td>
+      <td class="num muted">${((r - mean) / 25 > 0 ? '+' : '') + ((r - mean) / 25).toFixed(1)}</td></tr>`).join('');
+
+    el.innerHTML = `
+      <div class="card">
+        <h2>Settings</h2>
+        <div class="form-row">
+          <label for="set-apikey">The Odds API key</label>
+          <input type="password" id="set-apikey" value="${s.apiKey}" placeholder="free key from the-odds-api.com">
+          <button class="btn btn-sm" id="btn-show-key">show</button>
+        </div>
+        <p class="sub">Free tier = 500 credits/month. A full odds refresh costs 3, settling scores costs 2 —
+          two refreshes + one settle per week uses ~32/month.</p>
+        <div class="form-row">
+          <label for="set-primary">Primary book (your main app)</label>
+          <select id="set-primary">
+            <option value="fanduel" ${s.primaryBook === 'fanduel' ? 'selected' : ''}>FanDuel</option>
+            <option value="draftkings" ${s.primaryBook === 'draftkings' ? 'selected' : ''}>DraftKings</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="set-cap">Weekly stake cap ($, soft warning)</label>
+          <input type="number" id="set-cap" value="${s.weeklyCap}" min="0" step="5" style="width:100px">
+        </div>
+        <div class="form-row">
+          <label for="set-fav">Your team 🏈</label>
+          <select id="set-fav">
+            ${Object.keys(Elo.SEED_2026).map(t =>
+              `<option value="${t}" ${t === s.favoriteTeam ? 'selected' : ''}>${t}</option>`).join('')}
+          </select>
+        </div>
+        <button class="btn btn-primary" id="btn-save-settings">Save settings</button>
+      </div>
+
+      <div class="card">
+        <h2>Try it out</h2>
+        <p class="sub">No key yet? Load a sample week of games — with a built-in arbitrage and a middle —
+          to explore every tab. Demo data is clearly marked and never spends a credit.</p>
+        <button class="btn" id="btn-load-demo">🎮 Load demo data</button>
+      </div>
+
+      <div class="card">
+        <h2>Your data</h2>
+        <p class="sub">Everything lives in this browser only. Export a backup now and then —
+          clearing browser data wipes the ledger.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn" id="btn-export">⬇ Export backup (.json)</button>
+          <label class="btn" style="display:inline-block">⬆ Import backup
+            <input type="file" id="file-import" accept=".json" hidden></label>
+          <button class="btn btn-danger" id="btn-wipe">Erase everything</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Model power ratings</h2>
+        <p class="sub">Elo ratings, seeded for 2026 and self-updating from final scores every time you settle.
+          "Pts vs avg" is what the rating means as a point spread against an average team at a neutral site.
+          Seeded ${new Date(elo.seededAt).toLocaleDateString()} · ${elo.processed.length} games learned.</p>
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr><th>#</th><th>Team</th><th class="num">Elo</th><th class="num">Pts vs avg</th></tr></thead>
+            <tbody>${ratingRows}</tbody>
+          </table>
+        </div>
+        <button class="btn btn-danger btn-sm" id="btn-reseed" style="margin-top:10px">Reset model to preseason seed</button>
+      </div>`;
+
+    document.getElementById('btn-save-settings').onclick = () => {
+      s.apiKey = document.getElementById('set-apikey').value.trim();
+      s.primaryBook = document.getElementById('set-primary').value;
+      s.weeklyCap = parseFloat(document.getElementById('set-cap').value) || 0;
+      s.favoriteTeam = document.getElementById('set-fav').value;
+      Store.save();
+      this.banner('Settings saved.', 'good');
+    };
+    document.getElementById('btn-load-demo').onclick = () => Demo.load(false);
+    document.getElementById('btn-show-key').onclick = () => {
+      const inp = document.getElementById('set-apikey');
+      inp.type = inp.type === 'password' ? 'text' : 'password';
+    };
+    document.getElementById('btn-export').onclick = () => {
+      const blob = new Blob([Store.exportJson()], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'pros-fantasy-palace-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+      a.click();
+      URL.revokeObjectURL(a.href);
+    };
+    document.getElementById('file-import').onchange = async e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      try {
+        Store.importJson(await file.text());
+        this.banner('Backup imported.', 'good');
+        this.renderAll();
+      } catch (err) {
+        this.banner('Import failed: ' + err.message, 'error');
+      }
+    };
+    document.getElementById('btn-wipe').onclick = () => {
+      if (confirm('Erase ALL Pro\'s Fantasy Palace data (bets, settings, model)? This cannot be undone.')) {
+        localStorage.removeItem(Store.KEY);
+        Store.load();
+        this.renderAll();
+        this.banner('All data erased.', '');
+      }
+    };
+    document.getElementById('btn-reseed').onclick = () => {
+      if (confirm('Reset team ratings to the preseason seed? Season learning will be lost.')) {
+        Store.data.elo = null;
+        Elo.ensure();
+        this.renderSettings();
+        this.banner('Model reset to preseason ratings.', 'good');
+      }
+    };
+  },
+
+  /* ---------- init ---------- */
+
+  init() {
+    Store.load();
+    Elo.ensure();
+
+    // Demo builds (shared preview link): preload the sample slate so every
+    // tab has data, with no key and no network.
+    if (typeof Demo !== 'undefined' && Demo.isActive() && !Store.data.oddsCache) {
+      Demo.load(true);
+    }
+
+    document.getElementById('tabs').addEventListener('click', e => {
+      const tab = e.target.closest('.tab');
+      if (tab) this.showTab(tab.dataset.tab);
+    });
+    document.getElementById('btn-refresh-odds').onclick = () => this.refreshOdds();
+    document.getElementById('btn-refresh-scores').onclick = () => this.refreshScores();
+
+    if (Demo.isActive()) {
+      this.banner('🎮 Demo mode — a sample week is loaded so you can explore every tab. Live odds and notifications need the hosted version with your API key.', '');
+      this.showTab('card');
+    } else if (!Store.data.settings.apiKey) {
+      this.banner("Welcome to Pro's Fantasy Palace, Big Blue Edition. New here? Tap “Load demo data” in Settings to explore with sample games, or grab a free API key at the-odds-api.com for live odds. 🏈", '');
+      this.showTab('settings');
+    } else {
+      this.showTab('card');
+    }
+    this.renderQuota();
+    this.renderSpend();
+  },
+};
+
+document.addEventListener('DOMContentLoaded', () => App.init());
+
+</script>
