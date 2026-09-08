@@ -18,11 +18,21 @@ honest in one ledger.
 
 | Tab | What it does |
 |---|---|
-| **Weekly Card** | $1 against the spread + $1 straight up on every game. An Elo model makes the picks; flip any pick you disagree with and the Ledger scores *You vs Model* all season. Each pick is shopped to whichever book has the better number. |
+| **Weekly Card** | $1 against the spread + $1 straight up on every game. An Elo model makes the picks; flip any pick you disagree with and the Ledger scores *You vs Model* all season. Each pick is shopped to whichever book has the better number. **Two ways to log:** *🔒 real bets* (money you're actually placing) or *📋 paper-trade* (fake money, to test the model's accuracy risk-free). |
 | **Lightning Lab ⚡** | The long-shot builder, two modes. **Parlay:** combined odds, *true* odds (de-vigged), fair payout, EV per ticket, FD-vs-DK payout comparison, correlation notes (blocks impossible combos, flags correlated ones), on-demand **player props** (pass/rush/rec yards, TDs, receptions), and **round robins** (every combo as its own ticket, with the "one leg misses, still cashes" safety-net math). **Teaser:** 6/6.5/7-point spread & total teasers with payout tables, per-leg hit rates, and ⭐ Wong-leg flags (teasing through both key numbers 3 and 7). |
 | **Line Shop** | Every game's moneyline, spread, and total at FanDuel and DraftKings side by side, best price highlighted. Same bet, better number — the closest thing to free money. |
 | **Arb Finder 💰** | Scans FD vs DK for guaranteed two-way arbitrage (with the stake split), **middles** (line gaps where a window of final scores wins both bets — key numbers 3 & 7 flagged), and the cheapest-hold markets. Honest about it: true 2-book arbs are rare; middles are the everyday find. Includes the **🔔 Watcher**: keep the tab open and it rescans on your chosen interval and fires a browser notification the moment a new arb or key-number middle appears. Shows its API-credit burn rate and auto-pauses when credits run low. (No server means no push when the app is fully closed — the tab must stay open; on a phone, add to home screen and keep it running.) |
-| **Ledger** | Every bet auto-graded from final scores (props settle with one click). Season P&L chart by category, ATS/straight-up records, parlay & teaser near-misses, average closing line value, You-vs-Model, and a Giants-bets line. |
+| **Ledger** | Every bet auto-graded from final scores (props settle with one click). Season P&L chart by category, ATS/straight-up records, parlay & teaser near-misses, average closing line value, You-vs-Model, and a Giants-bets line. Filter **All / 💵 Real / 📋 Paper** so hypothetical accuracy-test bets never mix with real-money results. |
+
+## Testing the model before you trust it (paper trading)
+
+Not sure the model actually works? Don't bet a dollar until you've watched it.
+Hit **📋 Paper-trade the card** on the Weekly Card (or check *paper mode* in the
+Lightning Lab) to log the model's picks with fake money. Settle scores each week
+like normal — paper bets grade themselves from real final scores — then open the
+Ledger's **Paper** filter or the Recap's **Paper** toggle to see exactly what
+*would* have happened. It's the honest way to measure the model's accuracy and
+your own flips before any real money is on the line.
 | **Recap** | The Monday damage report: per-week or season-to-date P&L, best win, worst beat, closest parlay, CLV, You-vs-Model — with a one-tap copy-ready text summary for the group chat. |
 | **Settings** | API key, primary book, weekly stake cap (soft warning), JSON backup/restore, and the model's live power ratings. |
 

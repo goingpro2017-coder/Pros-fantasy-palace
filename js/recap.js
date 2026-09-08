@@ -4,14 +4,19 @@
 
 const Recap = {
   week: null, // null = latest week with bets
+  mode: 'real', // 'real' | 'paper'
+
+  scoped() {
+    return Store.data.bets.filter(b => (b.mode || 'real') === this.mode);
+  },
 
   weeksWithBets() {
-    const weeks = [...new Set(Store.data.bets.map(b => b.week).filter(w => w))].sort((a, b) => a - b);
+    const weeks = [...new Set(this.scoped().map(b => b.week).filter(w => w))].sort((a, b) => a - b);
     return weeks;
   },
 
   betsFor(week) {
-    return Store.data.bets.filter(b => week === 'season' ? true : b.week === week);
+    return this.scoped().filter(b => week === 'season' ? true : b.week === week);
   },
 
   stats(week) {
@@ -72,7 +77,7 @@ const Recap = {
   summaryText(week, s) {
     const wk = week === 'season' ? 'Season to date' : 'Week ' + week;
     const lines = [
-      `🏈 Pro's Fantasy Palace — ${wk} recap`,
+      `🏈 Pro's Fantasy Palace — ${wk} recap${this.mode === 'paper' ? ' (📋 paper / accuracy test)' : ''}`,
       `Net: ${MMath.money(s.net)} on ${MMath.money(s.staked)} staked${s.pending ? ` (${s.pending} pending)` : ''}`,
       `ATS card: ${Ledger.fmtRecord(s.ats)} (${MMath.money(s.ats.profit)})`,
       `Straight up: ${Ledger.fmtRecord(s.ml)} (${MMath.money(s.ml.profit)})`,
@@ -86,9 +91,15 @@ const Recap = {
     return lines.join('\n');
   },
 
+  modeBar() {
+    return `<div style="display:flex; gap:6px; margin-bottom:12px;">
+      <button class="btn btn-sm ${this.mode === 'real' ? 'btn-primary' : ''}" data-recap-mode="real">💵 Real</button>
+      <button class="btn btn-sm ${this.mode === 'paper' ? 'btn-primary' : ''}" data-recap-mode="paper">📋 Paper (accuracy test)</button>
+    </div>`;
+  },
+
   render() {
     const el = document.getElementById('tab-recap');
-    const weeks = this.weeksWithBets();
 
     if (!Store.data.bets.length) {
       el.innerHTML = `<div class="card"><div class="empty">
@@ -97,7 +108,19 @@ const Recap = {
       return;
     }
 
-    if (this.week === null) this.week = weeks.length ? weeks[weeks.length - 1] : 'season';
+    const weeks = this.weeksWithBets();
+    if (!weeks.length) {
+      el.innerHTML = `<div class="card"><h2>Recap</h2>${this.modeBar()}
+        <div class="empty">No ${this.mode} bets yet.
+        ${this.mode === 'paper' ? 'Hit “Paper-trade the card” on the Weekly Card to start an accuracy test.' : ''}</div></div>`;
+      el.querySelectorAll('[data-recap-mode]').forEach(b => {
+        b.onclick = () => { this.mode = b.dataset.recapMode; this.render(); };
+      });
+      return;
+    }
+    // keep the selected week valid for this mode
+    if (this.week !== 'season' && !weeks.includes(this.week)) this.week = null;
+    if (this.week === null) this.week = weeks[weeks.length - 1];
     const s = this.stats(this.week);
     const wkLabel = this.week === 'season' ? 'Season to date' : 'Week ' + this.week;
 
@@ -124,6 +147,8 @@ const Recap = {
         <h2>Recap</h2>
         <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:12px;">
           <label>Show <select id="recap-week">${opts}</select></label>
+          <button class="btn btn-sm ${this.mode === 'real' ? 'btn-primary' : ''}" data-recap-mode="real">💵 Real</button>
+          <button class="btn btn-sm ${this.mode === 'paper' ? 'btn-primary' : ''}" data-recap-mode="paper">📋 Paper</button>
           <button class="btn btn-sm" id="btn-copy-recap">📋 Copy text recap</button>
         </div>
         <div class="tiles">
@@ -147,6 +172,9 @@ const Recap = {
       this.week = e.target.value === 'season' ? 'season' : Number(e.target.value);
       this.render();
     };
+    el.querySelectorAll('[data-recap-mode]').forEach(b => {
+      b.onclick = () => { this.mode = b.dataset.recapMode; this.render(); };
+    });
     document.getElementById('btn-copy-recap').onclick = async () => {
       const text = document.getElementById('recap-text').textContent;
       try {

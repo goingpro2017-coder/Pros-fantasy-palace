@@ -10,6 +10,7 @@ const Parlay = {
   selectedEvent: null,
   propMarket: 'player_pass_yds',
   stake: 1,
+  paper: false,            // log tickets as fake (paper) instead of real
   offeredOverride: '',     // book's actual quoted odds (SGP / teaser card)
   rrSizes: { 2: true, 3: false },
   rrStake: 1,
@@ -172,6 +173,7 @@ const Parlay = {
       book: Store.data.settings.primaryBook,
       source: 'user',
       status: 'pending',
+      mode: this.paper ? 'paper' : 'real',
     };
   },
 
@@ -198,7 +200,7 @@ const Parlay = {
       trueProb: result.trueProb,
     }));
     Store.save();
-    App.banner(`Ticket logged: ${this.legs.length} legs, ${MMath.money(this.stake)}. Good luck. ⚡`, 'good');
+    App.banner(`${this.paper ? '📋 Paper ' : ''}Ticket logged: ${this.legs.length} legs, ${MMath.money(this.stake)}. Good luck. ⚡`, 'good');
     this.legs = [];
     this.offeredOverride = '';
     this.render();
@@ -228,7 +230,7 @@ const Parlay = {
       }));
     }
     Store.save();
-    App.banner(`Round robin logged: ${combos.length} tickets, ${MMath.money(combos.length * this.rrStake)} total.`, 'good');
+    App.banner(`${this.paper ? '📋 Paper ' : ''}Round robin logged: ${combos.length} tickets, ${MMath.money(combos.length * this.rrStake)} total.`, 'good');
     this.legs = [];
     this.render();
     App.renderSpend();
@@ -261,7 +263,7 @@ const Parlay = {
       }),
     }));
     Store.save();
-    App.banner(`Teaser logged: ${n} teams, ${this.teasePts} points, ${MMath.money(this.stake)}.`, 'good');
+    App.banner(`${this.paper ? '📋 Paper ' : ''}Teaser logged: ${n} teams, ${this.teasePts} points, ${MMath.money(this.stake)}.`, 'good');
     this.teaserLegs = [];
     this.offeredOverride = '';
     this.render();
@@ -298,9 +300,11 @@ const Parlay = {
     }).join('');
 
     const modeBtns = `
-      <div style="display:flex; gap:6px; margin-bottom:12px;">
+      <div style="display:flex; gap:6px; margin-bottom:12px; align-items:center; flex-wrap:wrap;">
         <button class="btn btn-sm ${this.mode === 'parlay' ? 'btn-primary' : ''}" data-mode="parlay">Parlay</button>
         <button class="btn btn-sm ${this.mode === 'teaser' ? 'btn-primary' : ''}" data-mode="teaser">Teaser</button>
+        <label style="margin-left:auto" title="Log tickets with fake money to test accuracy, separate from real bets">
+          <input type="checkbox" id="lab-paper" ${this.paper ? 'checked' : ''}> 📋 paper mode</label>
       </div>`;
 
     const body = this.mode === 'teaser'
@@ -606,6 +610,8 @@ const Parlay = {
     el.querySelectorAll('[data-mode]').forEach(b => {
       b.onclick = () => { this.mode = b.dataset.mode; this.render(); };
     });
+    const paperEl = document.getElementById('lab-paper');
+    if (paperEl) paperEl.onchange = () => { this.paper = paperEl.checked; };
     const gameSel = document.getElementById('lab-game');
     if (gameSel) gameSel.onchange = () => { this.selectedEvent = gameSel.value; this.render(); };
 

@@ -192,8 +192,15 @@ const Ledger = {
 
   fmtRecord(r) { return `${r.w}–${r.l}${r.p ? '–' + r.p : ''}`; },
 
+  filter: 'all', // 'all' | 'real' | 'paper'
+
+  visibleBets() {
+    if (this.filter === 'all') return Store.data.bets;
+    return Store.data.bets.filter(b => (b.mode || 'real') === this.filter);
+  },
+
   stats() {
-    const bets = Store.data.bets;
+    const bets = this.visibleBets();
     const settled = bets.filter(b => b.status !== 'pending');
     const ats = bets.filter(b => b.category === 'card-ats');
     const ml = bets.filter(b => b.category === 'card-ml');
@@ -249,7 +256,7 @@ const Ledger = {
   chartData() {
     const out = [];
     for (const s of this.SERIES) {
-      const bets = Store.data.bets
+      const bets = this.visibleBets()
         .filter(b => b.category === s.key && b.status !== 'pending')
         .sort((a, b) => (a.settledAt || a.createdAt) - (b.settledAt || b.createdAt));
       let cum = 0;
@@ -346,11 +353,26 @@ const Ledger = {
   render() {
     const el = document.getElementById('tab-ledger');
     const s = this.stats();
-    const bets = [...Store.data.bets].sort((a, b) => b.createdAt - a.createdAt);
+    const bets = [...this.visibleBets()].sort((a, b) => b.createdAt - a.createdAt);
 
+    const realCount = Store.data.bets.filter(b => (b.mode || 'real') === 'real').length;
+    const paperCount = Store.data.bets.filter(b => b.mode === 'paper').length;
+    const fbtn = (key, label) =>
+      `<button class="btn btn-sm ${this.filter === key ? 'btn-primary' : ''}" data-filter="${key}">${label}</button>`;
+    const filterBar = `
+      <div style="display:flex; gap:6px; align-items:center; margin-bottom:12px; flex-wrap:wrap;">
+        ${fbtn('all', 'All')}
+        ${fbtn('real', '💵 Real money')}
+        ${fbtn('paper', '📋 Paper (test)')}
+        <span class="muted small" style="margin-left:6px">${realCount} real · ${paperCount} paper</span>
+        ${this.filter === 'paper' ? '<span class="pill info">accuracy test — no real money</span>' : ''}
+      </div>`;
+
+    const netLabel = this.filter === 'paper' ? 'Paper P&amp;L (hypothetical)'
+      : this.filter === 'real' ? 'Net P&amp;L (real)' : 'Net P&amp;L';
     const tiles = `
       <div class="tiles">
-        <div class="tile"><div class="t-label">Net P&amp;L</div>
+        <div class="tile"><div class="t-label">${netLabel}</div>
           <div class="t-value ${s.net >= 0 ? 'pos' : 'neg'}">${MMath.money(s.net)}</div>
           <div class="t-sub">${MMath.money(s.staked)} staked · ${s.pending} pending</div></div>
         <div class="tile"><div class="t-label">ATS card</div>
@@ -395,11 +417,14 @@ const Ledger = {
           </table>
         </div>
       </div>` : `
-      <div class="card"><div class="empty">No bets logged yet.
+      <div class="card"><div class="empty">No ${this.filter === 'paper' ? 'paper' : this.filter === 'real' ? 'real' : ''} bets logged yet.
         Lock a Weekly Card or log a Lightning Lab ticket to get started.</div></div>`;
 
-    el.innerHTML = tiles + chart + table;
+    el.innerHTML = filterBar + tiles + chart + table;
 
+    el.querySelectorAll('[data-filter]').forEach(b => {
+      b.onclick = () => { this.filter = b.dataset.filter; this.render(); };
+    });
     if (chart) this.wireChart(data);
     el.querySelectorAll('[data-settle]').forEach(b => {
       b.onclick = () => this.manualSettle(b.dataset.bet, b.dataset.settle);
@@ -414,12 +439,13 @@ const Ledger = {
 
   renderBetRow(b) {
     const date = new Date(b.createdAt).toLocaleDateString(undefined, { month: 'numeric', day: 'numeric' });
-    const statusPill = {
+    const statusPill = ({
       pending: '<span class="pill">pending</span>',
       won: '<span class="pill good">won</span>',
       lost: '<span class="pill bad">lost</span>',
       push: '<span class="pill push">push</span>',
-    }[b.status] || b.status;
+    }[b.status] || b.status)
+      + (b.mode === 'paper' ? ' <span class="pill info" title="paper bet — no real money">📋</span>' : '');
 
     let desc;
     if (b.legs) {

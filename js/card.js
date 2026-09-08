@@ -84,11 +84,12 @@ const Card = {
     this.render();
   },
 
-  hasCardBet(eventId, category) {
-    return Store.data.bets.some(b => b.eventId === eventId && b.category === category);
+  hasCardBet(eventId, category, mode) {
+    return Store.data.bets.some(b => b.eventId === eventId && b.category === category &&
+      (b.mode || 'real') === mode);
   },
 
-  lockCard() {
+  lockCard(mode) {
     const events = this.upcomingEvents();
     let created = 0;
     for (const ev of events) {
@@ -102,8 +103,9 @@ const Card = {
         away: ev.away_team,
         stake: 1,
         status: 'pending',
+        mode,
       };
-      if (a.ats && !this.hasCardBet(ev.id, 'card-ats')) {
+      if (a.ats && !this.hasCardBet(ev.id, 'card-ats', mode)) {
         Store.data.bets.push(Object.assign({}, base, {
           id: Store.newId(),
           type: 'ats',
@@ -117,7 +119,7 @@ const Card = {
         }));
         created++;
       }
-      if (a.ml && !this.hasCardBet(ev.id, 'card-ml')) {
+      if (a.ml && !this.hasCardBet(ev.id, 'card-ml', mode)) {
         Store.data.bets.push(Object.assign({}, base, {
           id: Store.newId(),
           type: 'ml',
@@ -133,10 +135,13 @@ const Card = {
       }
     }
     Store.save();
-    App.banner(created
-      ? `Locked ${created} card bets ($${created} total). Place them at the listed books, then track them in the Ledger.`
-      : 'Nothing new to lock — this week\'s card is already in the Ledger.',
-      created ? 'good' : '');
+    if (!created) {
+      App.banner(`Nothing new to ${mode === 'paper' ? 'paper-track' : 'lock'} — this week's ${mode} card is already in the Ledger.`, '');
+    } else if (mode === 'paper') {
+      App.banner(`📋 Paper-tracking ${created} model picks — no money down. Settle scores each week and check the Ledger's Paper filter to see how the model does.`, 'good');
+    } else {
+      App.banner(`🔒 Locked ${created} real card bets ($${created} total). Place them at the listed books, then track them in the Ledger.`, 'good');
+    }
     this.render();
     App.renderSpend();
   },
@@ -159,8 +164,10 @@ const Card = {
       return;
     }
 
-    const allLocked = events.every(ev =>
-      this.hasCardBet(ev.id, 'card-ats') && this.hasCardBet(ev.id, 'card-ml'));
+    const lockedReal = events.every(ev =>
+      this.hasCardBet(ev.id, 'card-ats', 'real') && this.hasCardBet(ev.id, 'card-ml', 'real'));
+    const lockedPaper = events.every(ev =>
+      this.hasCardBet(ev.id, 'card-ats', 'paper') && this.hasCardBet(ev.id, 'card-ml', 'paper'));
 
     const rows = events.map(ev => this.renderGame(ev)).join('');
     const fetched = new Date(cache.fetchedAt).toLocaleString();
@@ -173,16 +180,24 @@ const Card = {
           Model picks shown; hit <b>flip</b> where your gut disagrees (tracked as You-vs-Model).
           Lines as of ${fetched}.</p>
         ${rows}
-        <div style="margin-top:14px; display:flex; gap:10px; align-items:center;">
-          <button class="btn btn-primary" id="btn-lock-card" ${allLocked ? 'disabled' : ''}>
-            🔒 Lock this week's card (${events.length * 2} × $1)
+        <div style="margin-top:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <button class="btn btn-primary" id="btn-lock-card" ${lockedReal ? 'disabled' : ''}>
+            🔒 Lock as real bets (${events.length * 2} × $1)
           </button>
-          ${allLocked ? '<span class="muted small">Card already locked — see Ledger.</span>' : ''}
+          <button class="btn" id="btn-paper-card" ${lockedPaper ? 'disabled' : ''}>
+            📋 Paper-trade the card (no money)
+          </button>
+          ${lockedReal ? '<span class="muted small">Real card locked.</span>' : ''}
+          ${lockedPaper ? '<span class="muted small">Paper card tracking.</span>' : ''}
         </div>
+        <p class="sub" style="margin-top:6px">Paper-trading logs the model's picks with fake money so you can
+          watch how accurate it really is — separate from your real bets, filterable in the Ledger.</p>
       </div>`;
 
     const btn = document.getElementById('btn-lock-card');
-    if (btn) btn.onclick = () => this.lockCard();
+    if (btn) btn.onclick = () => this.lockCard('real');
+    const paperBtn = document.getElementById('btn-paper-card');
+    if (paperBtn) paperBtn.onclick = () => this.lockCard('paper');
     el.querySelectorAll('[data-flip]').forEach(b => {
       b.onclick = () => this.toggleFlip(b.dataset.event, b.dataset.flip);
     });

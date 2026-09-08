@@ -52,7 +52,7 @@ const App = {
     const cap = Store.data.settings.weeklyCap;
     if (!cap) return;
     const spent = Store.data.bets
-      .filter(b => this.weekOf(b.createdAt) === week)
+      .filter(b => this.weekOf(b.createdAt) === week && (b.mode || 'real') === 'real')
       .reduce((s, b) => s + b.stake, 0);
     if (spent > cap) {
       this.banner(`Heads up: ${MMath.money(spent)} staked this week — over your ${MMath.money(cap)} cap. The lightning can wait for next week.`, 'warn');
