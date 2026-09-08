@@ -1,4 +1,4 @@
-# MarginAce 🏈 — Big Blue Edition
+# Pro's Fantasy Palace 🏈 — Big Blue Edition
 
 A personal NFL betting edge-finder and tracker, dressed in Giants navy and red.
 No install, no server, no account — one HTML page, your data stays in your browser.
@@ -9,7 +9,7 @@ in the Ledger (betting with your heart, quantified). Pick a different favorite
 team in Settings if a Cowboys fan ever borrows this.
 
 **What it will not do:** guarantee profit. NFL markets are sharp; the standard −110
-vig means you need 52.4% ATS just to break even. What MarginAce does is squeeze out
+vig means you need 52.4% ATS just to break even. What the Palace does is squeeze out
 the edges that actually exist — better prices via line shopping, honest parlay math,
 closing-line-value tracking so you know if you have an edge — and keep your season
 honest in one ledger.
@@ -65,5 +65,5 @@ value, not by any hot streak.
 
 ---
 
-*MarginAce is a tracking and analysis tool, not betting advice. Bet only what you
+*Pro's Fantasy Palace is a tracking and analysis tool, not betting advice. Bet only what you
 can afford to lose. 21+. Gambling problem? Call 1-800-GAMBLER.*

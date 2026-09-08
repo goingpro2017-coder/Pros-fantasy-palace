@@ -200,7 +200,7 @@ const App = {
       const blob = new Blob([Store.exportJson()], { type: 'application/json' });
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'marginace-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+      a.download = 'pros-fantasy-palace-backup-' + new Date().toISOString().slice(0, 10) + '.json';
       a.click();
       URL.revokeObjectURL(a.href);
     };
@@ -216,7 +216,7 @@ const App = {
       }
     };
     document.getElementById('btn-wipe').onclick = () => {
-      if (confirm('Erase ALL MarginAce data (bets, settings, model)? This cannot be undone.')) {
+      if (confirm('Erase ALL Pro\'s Fantasy Palace data (bets, settings, model)? This cannot be undone.')) {
         localStorage.removeItem(Store.KEY);
         Store.load();
         this.renderAll();
@@ -247,7 +247,7 @@ const App = {
     document.getElementById('btn-refresh-scores').onclick = () => this.refreshScores();
 
     if (!Store.data.settings.apiKey) {
-      this.banner('Welcome to MarginAce, Big Blue Edition. Grab a free API key at the-odds-api.com, drop it in Settings, and hit Refresh odds. 🏈', '');
+      this.banner("Welcome to Pro's Fantasy Palace, Big Blue Edition. Grab a free API key at the-odds-api.com, drop it in Settings, and hit Refresh odds. 🏈", '');
       this.showTab('settings');
     } else {
       this.showTab('card');
