@@ -77,7 +77,7 @@ const Recap = {
   summaryText(week, s) {
     const wk = week === 'season' ? 'Season to date' : 'Week ' + week;
     const lines = [
-      `🏈 Pro's Fantasy Palace — ${wk} recap${this.mode === 'paper' ? ' (📋 paper / accuracy test)' : ''}`,
+      `🏈 Provini’s Palace — ${wk} recap${this.mode === 'paper' ? ' (📋 paper / accuracy test)' : ''}`,
       `Net: ${MMath.money(s.net)} on ${MMath.money(s.staked)} staked${s.pending ? ` (${s.pending} pending)` : ''}`,
       `ATS card: ${Ledger.fmtRecord(s.ats)} (${MMath.money(s.ats.profit)})`,
       `Straight up: ${Ledger.fmtRecord(s.ml)} (${MMath.money(s.ml.profit)})`,

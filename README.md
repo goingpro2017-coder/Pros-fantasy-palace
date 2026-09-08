@@ -1,4 +1,4 @@
-# Pro's Fantasy Palace 🏈 — Big Blue Edition
+# Provini’s Palace 🏈 — Big Blue Edition
 
 A personal NFL betting edge-finder and tracker, dressed in Giants navy and red.
 No install, no server, no account — one HTML page, your data stays in your browser.
@@ -77,5 +77,5 @@ value, not by any hot streak.
 
 ---
 
-*Pro's Fantasy Palace is a tracking and analysis tool, not betting advice. Bet only what you
+*Provini’s Palace is a tracking and analysis tool, not betting advice. Bet only what you
 can afford to lose. 21+. Gambling problem? Call 1-800-GAMBLER.*

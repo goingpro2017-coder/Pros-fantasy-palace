@@ -1,4 +1,4 @@
-<title>Pro's Fantasy Palace — Big Blue Edition</title>
+<title>Provini’s Palace — Big Blue Edition</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -472,7 +472,7 @@ td.num, th.num { text-align: right; }
 <header class="topbar">
   <div class="brand">
     <span class="brand-mark">ny</span>
-    <span class="brand-name">Pro's Fantasy Palace</span>
+    <span class="brand-name">Provini’s Palace</span>
     <span class="brand-tag">Big Blue Edition</span>
   </div>
   <div class="topbar-actions">
@@ -505,7 +505,7 @@ td.num, th.num { text-align: right; }
 </main>
 
 <footer class="footer">
-  <p>Pro's Fantasy Palace is a tracking &amp; analysis tool, not betting advice. Sports betting involves risk and no model
+  <p>Provini’s Palace is a tracking &amp; analysis tool, not betting advice. Sports betting involves risk and no model
   guarantees profit. Bet only what you can afford to lose. 21+.
   Problem? Call 1-800-GAMBLER.</p>
 </footer>
@@ -837,7 +837,7 @@ const Store = {
   importJson(text) {
     const parsed = JSON.parse(text); // throws on bad JSON
     if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.bets)) {
-      throw new Error("Not a Pro's Fantasy Palace export file");
+      throw new Error("Not a Provini’s Palace export file");
     }
     this.data = Object.assign(this.defaults(), parsed);
     this.save();
@@ -2716,7 +2716,7 @@ const Recap = {
   summaryText(week, s) {
     const wk = week === 'season' ? 'Season to date' : 'Week ' + week;
     const lines = [
-      `🏈 Pro's Fantasy Palace — ${wk} recap${this.mode === 'paper' ? ' (📋 paper / accuracy test)' : ''}`,
+      `🏈 Provini’s Palace — ${wk} recap${this.mode === 'paper' ? ' (📋 paper / accuracy test)' : ''}`,
       `Net: ${MMath.money(s.net)} on ${MMath.money(s.staked)} staked${s.pending ? ` (${s.pending} pending)` : ''}`,
       `ATS card: ${Ledger.fmtRecord(s.ats)} (${MMath.money(s.ats.profit)})`,
       `Straight up: ${Ledger.fmtRecord(s.ml)} (${MMath.money(s.ml.profit)})`,
@@ -3592,7 +3592,7 @@ const App = {
       this.banner('🎮 Demo mode — a sample week is loaded so you can explore every tab. Live odds and notifications need the hosted version with your API key.', '');
       this.showTab('card');
     } else if (!Store.data.settings.apiKey) {
-      this.banner("Welcome to Pro's Fantasy Palace, Big Blue Edition. New here? Tap “Load demo data” in Settings to explore with sample games, or grab a free API key at the-odds-api.com for live odds. 🏈", '');
+      this.banner("Welcome to Provini’s Palace, Big Blue Edition. New here? Tap “Load demo data” in Settings to explore with sample games, or grab a free API key at the-odds-api.com for live odds. 🏈", '');
       this.showTab('settings');
     } else {
       this.showTab('card');
