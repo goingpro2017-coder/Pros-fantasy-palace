@@ -1,6 +1,6 @@
 {
-  "name": "Provini's Palace",
-  "short_name": "Provini's",
+  "name": "Provini's Gambling Genie",
+  "short_name": "Genie",
   "description": "NFL betting edge-finder and tracker — Big Blue Edition",
   "start_url": ".",
   "scope": ".",
@@ -9,7 +9,17 @@
   "background_color": "#060b18",
   "theme_color": "#0b2265",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }

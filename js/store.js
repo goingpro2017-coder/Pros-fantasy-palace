@@ -52,7 +52,7 @@ const Store = {
   importJson(text) {
     const parsed = JSON.parse(text); // throws on bad JSON
     if (!parsed || typeof parsed !== 'object' || !Array.isArray(parsed.bets)) {
-      throw new Error("Not a Provini’s Palace export file");
+      throw new Error("Not a Provini’s Gambling Genie export file");
     }
     this.data = Object.assign(this.defaults(), parsed);
     this.save();

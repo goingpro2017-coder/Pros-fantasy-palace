@@ -266,7 +266,7 @@ const App = {
       this.banner('🎮 Demo mode — a sample week is loaded so you can explore every tab. Live odds and notifications need the hosted version with your API key.', '');
       this.showTab('card');
     } else if (!Store.data.settings.apiKey) {
-      this.banner("Welcome to Provini’s Palace, Big Blue Edition. New here? Tap “Load demo data” in Settings to explore with sample games, or grab a free API key at the-odds-api.com for live odds. 🏈", '');
+      this.banner("Welcome to Provini’s Gambling Genie, Big Blue Edition. New here? Tap “Load demo data” in Settings to explore with sample games, or grab a free API key at the-odds-api.com for live odds. 🏈", '');
       this.showTab('settings');
     } else {
       this.showTab('card');

@@ -7,7 +7,7 @@ const path = require('path');
 const root = path.join(__dirname, '..');
 
 const html = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
-const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || "Provini’s Palace";
+const title = (html.match(/<title>([^<]*)<\/title>/) || [])[1] || "Provini’s Gambling Genie";
 
 const bodyStart = html.indexOf('>', html.indexOf('<body')) + 1;
 const firstScript = html.indexOf('<script');

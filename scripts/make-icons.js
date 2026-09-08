@@ -1,4 +1,4 @@
-/* Render the Provini's Palace crest to PNG icons (192/512/180) with
+/* Render the Provini's Gambling Genie crest to PNG icons (192/512/180) with
    headless Chromium. Gold crown (it's a Palace) over a football on deep
    Giants navy with a warm glow — original artwork. Run: node scripts/make-icons.js */
 
