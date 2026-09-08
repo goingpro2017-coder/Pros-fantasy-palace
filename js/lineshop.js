@@ -38,10 +38,22 @@ const LineShop = {
           const o = m && (m.outcomes || []).find(x => x.name === name);
           return o || null;
         });
-        // best = highest price; for spreads/totals note when points differ
+        // "best" must respect the POINT, not just the price:
+        //  - spreads: more points for your side wins (+3 > +2.5; -2.5 > -3)
+        //  - totals Over: a lower number is easier; Under: a higher number
+        //  - moneyline: just the best price
+        // price breaks ties.
+        const better = (a, b) => {
+          if (market === 'spreads') {
+            if (a.point !== b.point) return a.point > b.point;
+          } else if (market === 'totals') {
+            if (a.point !== b.point) return name === 'Over' ? a.point < b.point : a.point > b.point;
+          }
+          return a.price > b.price;
+        };
         let bestIdx = -1;
         quotes.forEach((q, i) => {
-          if (q && (bestIdx === -1 || q.price > quotes[bestIdx].price)) bestIdx = i;
+          if (q && (bestIdx === -1 || better(q, quotes[bestIdx]))) bestIdx = i;
         });
         return quotes.map((q, i) => {
           if (!q) return '<td class="muted">—</td>';

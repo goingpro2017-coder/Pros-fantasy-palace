@@ -43,7 +43,7 @@ const Arb = {
           sideB: `${App.short(ev.home_team)} ML ${MMath.formatAmerican(mlH.price)} @ ${App.bookName(mlH.book)}`,
           r,
         };
-        if (r.isArb) arbs.push(entry); else holds.push(entry);
+        if (r.isArb && mlA.book !== mlH.book) arbs.push(entry); else holds.push(entry);
       }
 
       // --- spreads: same-point arbs + middles ---
