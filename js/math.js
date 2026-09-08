@@ -93,6 +93,62 @@ const MMath = {
     return z > 0 ? 1 - p : p;
   },
 
+  /* ---- arbitrage & middles ---- */
+
+  /* Two-way arb check. hold < 1 means guaranteed profit; the stake split
+     makes the return identical whichever side wins. */
+  arbTwoWay(priceA, priceB, total) {
+    const impA = this.americanToImplied(priceA);
+    const impB = this.americanToImplied(priceB);
+    const hold = impA + impB;
+    const t = total || 100;
+    return {
+      hold,
+      isArb: hold < 1,
+      profitPct: 1 / hold - 1,     // negative = the books' combined vig
+      stakeA: t * impA / hold,
+      stakeB: t * impB / hold,
+      guaranteedReturn: t / hold,
+      profit: t / hold - t,
+    };
+  },
+
+  /* ---- teasers ---- */
+
+  /* Tease a spread: you always get MORE points (or lay fewer). */
+  teaseSpread(point, pts) { return point + pts; },
+  /* Tease a total: Over comes down, Under goes up. */
+  teaseTotal(point, pts, isOver) { return isOver ? point - pts : point + pts; },
+
+  /* Wong teaser check (6pt+): the teased spread crosses BOTH key numbers
+     3 and 7 — underdogs +1.5 to +2.5, favorites -7.5 to -8.5. */
+  isWongLeg(point, teasePts) {
+    if (teasePts < 6) return false;
+    return (point >= 1.5 && point <= 2.5) || (point <= -7.5 && point >= -8.5);
+  },
+
+  /* Cover probability of a leg teased by `pts` from the market number
+     (which implies ~50%), under the normal-margin model. */
+  teasedCoverProb(pts) { return this.normCdf(pts / 13.86); },
+
+  /* ---- round robins ---- */
+
+  combinations(arr, k) {
+    if (k <= 0 || k > arr.length) return [];
+    if (k === 1) return arr.map(x => [x]);
+    const out = [];
+    const rec = (start, combo) => {
+      if (combo.length === k) { out.push(combo.slice()); return; }
+      for (let i = start; i <= arr.length - (k - combo.length); i++) {
+        combo.push(arr[i]);
+        rec(i + 1, combo);
+        combo.pop();
+      }
+    };
+    rec(0, []);
+    return out;
+  },
+
   /* ---- money ---- */
 
   money(v) {

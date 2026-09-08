@@ -16,6 +16,7 @@ const Store = {
       },
       elo: null,          // { ratings: {team: rating}, processed: [gameIds], seededAt }
       oddsCache: null,    // { fetchedAt, events: [...] }
+      propsCache: {},     // eventId -> { fetchedAt, event } (per-event prop markets)
       closing: {},        // eventId -> { [market]: snapshot } last seen before kickoff
       quota: null,        // { remaining, used, at }
       bets: [],

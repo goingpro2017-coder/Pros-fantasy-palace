@@ -74,7 +74,9 @@ const App = {
     if (name === 'card') Card.render();
     else if (name === 'lab') Parlay.render();
     else if (name === 'shop') LineShop.render();
+    else if (name === 'arb') Arb.render();
     else if (name === 'ledger') Ledger.render();
+    else if (name === 'recap') Recap.render();
     else if (name === 'settings') this.renderSettings();
   },
 

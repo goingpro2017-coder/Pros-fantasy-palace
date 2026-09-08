@@ -57,6 +57,50 @@ ok('missing fairProb falls back to implied', () => {
   close(r.trueProb, 0.5);
 });
 
+console.log('arbitrage');
+ok('opposite plus-money on both sides is an arb', () => {
+  const r = MMath.arbTwoWay(110, 110, 100);
+  assert(r.isArb, 'should be arb');
+  close(r.stakeA, 50); close(r.stakeB, 50);
+  assert(r.profit > 0);
+});
+ok('standard -110/-110 is NOT an arb (it holds)', () => {
+  const r = MMath.arbTwoWay(-110, -110, 100);
+  assert(!r.isArb);
+  assert(r.profit < 0);
+  close(r.hold, 1.0476, 1e-3);
+});
+ok('arb split returns the same either way', () => {
+  const r = MMath.arbTwoWay(120, -105, 100);
+  const retA = r.stakeA * MMath.americanToDecimal(120);
+  const retB = r.stakeB * MMath.americanToDecimal(-105);
+  close(retA, retB, 1e-6);
+  close(retA, r.guaranteedReturn, 1e-6);
+});
+
+console.log('teasers');
+ok('6pt tease adds points to a dog', () => close(MMath.teaseSpread(2.5, 6), 8.5));
+ok('6pt tease helps a favorite', () => close(MMath.teaseSpread(-7.5, 6), -1.5));
+ok('total tease: Over comes down, Under goes up', () => {
+  close(MMath.teaseTotal(48, 6, true), 42);
+  close(MMath.teaseTotal(48, 6, false), 54);
+});
+ok('Wong legs: dog +2.5 and fav -7.5 qualify at 6pt', () => {
+  assert(MMath.isWongLeg(2.5, 6));
+  assert(MMath.isWongLeg(-7.5, 6));
+  assert(!MMath.isWongLeg(3.5, 6), '+3.5 does not cross both keys the same way');
+  assert(!MMath.isWongLeg(2.5, 5), 'under 6pts is not a Wong tease');
+});
+ok('teased cover prob beats 50%', () => assert(MMath.teasedCoverProb(6) > 0.6));
+
+console.log('round robins');
+ok('C(4,2) = 6 combos', () => assert.equal(MMath.combinations([1, 2, 3, 4], 2).length, 6));
+ok('C(5,3) = 10 combos', () => assert.equal(MMath.combinations([1, 2, 3, 4, 5], 3).length, 10));
+ok('combos are the right size and unique', () => {
+  const c = MMath.combinations(['a', 'b', 'c'], 2);
+  assert.deepEqual(c, [['a', 'b'], ['a', 'c'], ['b', 'c']]);
+});
+
 console.log('model math');
 ok('even elo = 50%', () => close(MMath.eloWinProb(0), 0.5));
 ok('+100 elo ≈ 64%', () => close(MMath.eloWinProb(100), 0.64, 0.01));

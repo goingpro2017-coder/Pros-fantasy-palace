@@ -51,15 +51,15 @@ const Ledger = {
     for (const bet of Store.data.bets) {
       if (bet.status !== 'pending') continue;
 
-      if (bet.type === 'parlay') {
+      if (bet.legs) {
         let changed = false;
         for (const leg of bet.legs) {
-          if (leg.status !== 'pending' || leg.custom || !leg.eventId) continue;
+          if (leg.status !== 'pending' || leg.custom || leg.prop || !leg.eventId) continue;
           const r = this.gradeLeg(leg, byId[leg.eventId]);
           if (r) { leg.status = r; changed = true; }
         }
         if (changed || bet.legs.some(l => l.status !== 'pending')) {
-          this.resolveParlay(bet);
+          if (bet.type === 'teaser') this.resolveTeaser(bet); else this.resolveParlay(bet);
           if (bet.status !== 'pending') settled++;
         }
         continue;
@@ -105,20 +105,44 @@ const Ledger = {
     if (!bet) return;
     bet.status = status;
     bet.settledAt = Date.now();
-    bet.profit = bet.type === 'parlay' && status === 'won'
+    bet.profit = (bet.type === 'parlay' || bet.type === 'teaser') && status === 'won'
       ? bet.stake * (MMath.americanToDecimal(bet.price) - 1)
       : this.profitFor(bet, status);
-    if (bet.type !== 'parlay') this.computeClv(bet);
+    if (!bet.legs) this.computeClv(bet);
     Store.save();
     this.render();
     App.renderSpend();
+  },
+
+  /* Teasers: any lost leg loses; pushes drop the teaser to the payout
+     tier for the remaining leg count; below 2 live legs it's a push. */
+  resolveTeaser(bet) {
+    if (bet.legs.some(l => l.status === 'lost')) {
+      bet.status = 'lost';
+      bet.settledAt = Date.now();
+      bet.profit = -bet.stake;
+      return;
+    }
+    if (!bet.legs.every(l => l.status === 'won' || l.status === 'push')) return;
+    const wonCount = bet.legs.filter(l => l.status === 'won').length;
+    bet.settledAt = Date.now();
+    if (wonCount === bet.legs.length) {
+      bet.status = 'won';
+      bet.profit = bet.stake * (MMath.americanToDecimal(bet.price) - 1);
+    } else if (wonCount >= 2 && bet.teaserTable && bet.teaserTable[wonCount]) {
+      bet.status = 'won';
+      bet.profit = bet.stake * (MMath.americanToDecimal(bet.teaserTable[wonCount]) - 1);
+    } else {
+      bet.status = 'push';
+      bet.profit = 0;
+    }
   },
 
   manualSettleLeg(betId, legIdx, status) {
     const bet = Store.data.bets.find(b => b.id === betId);
     if (!bet || !bet.legs || !bet.legs[legIdx]) return;
     bet.legs[legIdx].status = status;
-    this.resolveParlay(bet);
+    if (bet.type === 'teaser') this.resolveTeaser(bet); else this.resolveParlay(bet);
     Store.save();
     this.render();
   },
@@ -398,11 +422,11 @@ const Ledger = {
     }[b.status] || b.status;
 
     let desc;
-    if (b.type === 'parlay') {
+    if (b.legs) {
       const legs = b.legs.map((l, i) => {
         const mark = l.status === 'won' ? '✓' : l.status === 'lost' ? '✗' : l.status === 'push' ? '≈' : '·';
         const cls = l.status === 'won' ? 'pos' : l.status === 'lost' ? 'neg' : 'muted';
-        const manual = (l.custom && l.status === 'pending' && b.status === 'pending')
+        const manual = ((l.custom || l.prop) && l.status === 'pending' && b.status === 'pending')
           ? ` <button class="btn btn-sm" data-legsettle="won" data-bet="${b.id}" data-leg="${i}">✓</button>
               <button class="btn btn-sm" data-legsettle="lost" data-bet="${b.id}" data-leg="${i}">✗</button>`
           : '';

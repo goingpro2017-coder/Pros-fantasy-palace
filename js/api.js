@@ -39,6 +39,35 @@ const Api = {
     return events;
   },
 
+  /* Player prop markets pulled on demand, one game at a time —
+     each fetch costs (number of markets) credits, so it's a button,
+     not part of the weekly refresh. */
+  PROP_MARKETS: [
+    { key: 'player_pass_yds', label: 'Pass yds' },
+    { key: 'player_pass_tds', label: 'Pass TDs' },
+    { key: 'player_rush_yds', label: 'Rush yds' },
+    { key: 'player_reception_yds', label: 'Rec yds' },
+    { key: 'player_receptions', label: 'Receptions' },
+    { key: 'player_anytime_td', label: 'Anytime TD' },
+  ],
+
+  async fetchEventProps(eventId) {
+    const event = await this.request('/events/' + eventId + '/odds', {
+      regions: 'us',
+      markets: this.PROP_MARKETS.map(m => m.key).join(','),
+      oddsFormat: 'american',
+      bookmakers: Store.data.settings.books.join(','),
+    });
+    Store.data.propsCache[eventId] = { fetchedAt: Date.now(), event };
+    // prune prop caches for games that have started
+    for (const id in Store.data.propsCache) {
+      const e = Store.data.propsCache[id].event;
+      if (e && Date.parse(e.commence_time) < Date.now() - 864e5) delete Store.data.propsCache[id];
+    }
+    Store.save();
+    return event;
+  },
+
   async fetchScores() {
     const games = await this.request('/scores', { daysFrom: 3 });
     Store.save(); // persist quota
