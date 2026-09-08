@@ -337,6 +337,19 @@ td.num, th.num { text-align: right; }
   pointer-events: none;
 }
 
+/* ---------- ask the genie ---------- */
+
+.genie-pick {
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--series-1);
+  border-radius: 8px;
+  margin-bottom: 7px;
+  background: var(--surface-2);
+  font-size: 14px;
+}
+.genie-pick .pill { margin-left: 6px; }
+
 /* ---------- help / explanations ---------- */
 
 .term {

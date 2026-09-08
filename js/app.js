@@ -73,6 +73,7 @@ const App = {
   renderTab(name) {
     if (name === 'help') Help.render();
     else if (name === 'card') Card.render();
+    else if (name === 'genie') Genie.render();
     else if (name === 'lab') Parlay.render();
     else if (name === 'shop') LineShop.render();
     else if (name === 'arb') Arb.render();
